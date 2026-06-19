@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VarjaSS — Sablon Katalógus</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark:    #0B0D14;
+      --silver:     #E5E7EB;
+      --accent:     #9CA3AF;
+      --glow-red:   rgba(220, 38, 38, 0.12);
+      --glow-gold:  rgba(251, 191, 36, 0.08);
+      --border:     rgba(255, 255, 255, 0.08);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      font-family: 'Inter', sans-serif;
+      color: var(--silver);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Ambient Háttér ─── */
+    .ambient-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .glow-sphere {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.6;
+      animation: float-glow 10s infinite alternate ease-in-out;
+    }
+    .sphere-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--glow-red); }
+    .sphere-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: var(--glow-gold); animation-delay: -5s; }
+    
+    @keyframes float-glow {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 50px) scale(1.1); }
+    }
+
+    /* ─── Fejléc & Breadcrumb ─── */
+    header {
+      padding: 3rem 2rem 1rem 2rem;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .brand-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      letter-spacing: 0.15em;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 2rem;
+    }
+
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .step-item {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: #4B5563;
+      font-weight: 600;
+      transition: color 0.4s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .step-item.active { color: #fff; }
+    .step-item.completed { color: #9CA3AF; cursor: pointer; }
+    .step-item.completed:hover { color: #fff; }
+    .step-divider { width: 40px; height: 1px; background: #374151; }
+    .step-item.active ~ .step-divider { background: #1F2937; }
+
+    /* ─── Fő Tartalom Terület ─── */
+    .main-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      width: 100%;
+      position: relative;
+    }
+
+    .step-section {
+      position: absolute;
+      width: 100%;
+      max-width: 1200px;
+      display: none; /* JS kezeli a láthatóságot */
+      opacity: 0;
+    }
+
+    .step-section.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      color: #fff;
+      margin-bottom: 3rem;
+      letter-spacing: 0.05em;
+      text-align: center;
+    }
+
+    /* ─── Kártyák (Univerzális Glassmorphism) ─── */
+    .glass-btn {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      color: var(--silver);
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .glass-btn:hover:not(.disabled) {
+      transform: translateY(-5px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4), 0 0 15px rgba(220, 38, 38, 0.05);
+    }
+    .glass-btn:hover:not(.disabled)::before { opacity: 1; }
+
+    /* 1. Lépés: Nem választó kártyák */
+    .gender-grid {
+      display: flex;
+      gap: 2rem;
+      width: 100%;
+      max-width: 800px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .gender-card {
+      flex: 1;
+      min-width: 280px;
+      padding: 4rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .gender-icon { font-size: 3rem; color: #fff; opacity: 0.8; transition: transform 0.4s ease; }
+    .gender-card:hover .gender-icon { transform: scale(1.1); opacity: 1; }
+    .gender-title { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.1em; }
+
+    /* 2. Lépés: Szakma választó rács */
+    .profession-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .prof-card {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .prof-info { display: flex; align-items: center; gap: 1rem; }
+    .prof-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; font-size: 1.2rem; color: #9CA3AF; }
+    .prof-card:hover:not(.disabled) .prof-icon { color: #fff; background: rgba(220,38,38,0.2); }
+    .prof-name { font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; }
+    
+    .badge {
+      font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 50px;
+      background: rgba(255,255,255,0.05); color: #6B7280; border: 1px solid rgba(255,255,255,0.1);
+    }
+    .badge.active-badge { background: rgba(220,38,38,0.15); color: #FCA5A5; border-color: rgba(220,38,38,0.3); }
+
+    .disabled { opacity: 0.5; cursor: not-allowed; }
+    .disabled:hover { transform: none; box-shadow: none; border-color: var(--border); }
+
+    /* 3. Lépés: Architektúra kártyák */
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      width: 100%;
+    }
+
+    .arch-card {
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .arch-icon { width: 70px; height: 70px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: #fff; margin-bottom: 1.5rem; background: rgba(0,0,0,0.2); transition: all 0.4s ease; }
+    .arch-card:hover .arch-icon { background: rgba(255,255,255,0.1); transform: translateY(-5px); }
+    .arch-title { font-family: 'Cinzel', serif; font-size: 1.3rem; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 1rem; }
+    .arch-desc { font-size: 0.8rem; line-height: 1.6; color: #9CA3AF; }
+
+  </style>
+</head>
+<body>
+
+  <div class="ambient-bg">
+    <div class="glow-sphere sphere-1"></div>
+    <div class="glow-sphere sphere-2"></div>
+  </div>
+
+  <header>
+    <div class="brand-title">VarjaSS</div>
+    
+    <div class="stepper">
+      <div class="step-item active" id="nav-step-1" onclick="goToStep(1)"><span>01.</span> Nem</div>
+      <div class="step-divider"></div>
+      <div class="step-item" id="nav-step-2" onclick="goToStep(2)"><span>02.</span> Szakma</div>
+      <div class="step-divider"></div>
+      <div class="step-item" id="nav-step-3"><span>03.</span> Stílus</div>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <section class="step-section active" id="step-1">
+      <h2 class="section-title">A Fő Karakter</h2>
+      <div class="gender-grid">
+        <button class="glass-btn gender-card" onclick="advanceToStep(2, 'Férfi')">
+          <i class="fa-solid fa-mars gender-icon"></i>
+          <div class="gender-title">Férfi</div>
+        </button>
+        <button class="glass-btn gender-card" onclick="advanceToStep(2, 'Nő')">
+          <i class="fa-solid fa-venus gender-icon"></i>
+          <div class="gender-title">Nő</div>
+        </button>
+      </div>
+    </section>
+
+    <section class="step-section" id="step-2">
+      <h2 class="section-title">Az Iparág</h2>
+      <div class="profession-grid">
+        
+        <button class="glass-btn prof-card" onclick="advanceToStep(3, 'Biztosítás')">
+          <div class="prof-info">
+            <div class="prof-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <span class="prof-name">Biztosítás & Pénzügy</span>
+          </div>
+          <span class="badge active-badge">3 Sablon</span>
+        </button>
+
+        <button class="glass-btn prof-card disabled">
+          <div class="prof-info">
+            <div class="prof-icon"><i class="fa-solid fa-house-chimney"></i></div>
+            <span class="prof-name">Ingatlanértékesítés</span>
+          </div>
+          <span class="badge">0 Sablon</span>
+        </button>
+
+        <button class="glass-btn prof-card disabled">
+          <div class="prof-info">
+            <div class="prof-icon"><i class="fa-solid fa-dumbbell"></i></div>
+            <span class="prof-name">Fitnesz & Személyi Edző</span>
+          </div>
+          <span class="badge">0 Sablon</span>
+        </button>
+
+        <button class="glass-btn prof-card disabled">
+          <div class="prof-info">
+            <div class="prof-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+            <span class="prof-name">Ügyvéd & Jog</span>
+          </div>
+          <span class="badge">0 Sablon</span>
+        </button>
+
+        <button class="glass-btn prof-card disabled">
+          <div class="prof-info">
+            <div class="prof-icon"><i class="fa-solid fa-palette"></i></div>
+            <span class="prof-name">Kreatív Ügynökség</span>
+          </div>
+          <span class="badge">0 Sablon</span>
+        </button>
+
+        <button class="glass-btn prof-card disabled">
+          <div class="prof-info">
+            <div class="prof-icon"><i class="fa-solid fa-stethoscope"></i></div>
+            <span class="prof-name">Orvos & Magánklinika</span>
+          </div>
+          <span class="badge">0 Sablon</span>
+        </button>
+
+        <button class="glass-btn prof-card disabled">
+          <div class="prof-info">
+            <div class="prof-icon"><i class="fa-solid fa-utensils"></i></div>
+            <span class="prof-name">Étterem & Vendéglátás</span>
+          </div>
+          <span class="badge">0 Sablon</span>
+        </button>
+
+        <button class="glass-btn prof-card disabled">
+          <div class="prof-info">
+            <div class="prof-icon"><i class="fa-solid fa-helmet-safety"></i></div>
+            <span class="prof-name">Építőipar & Kivitelezés</span>
+          </div>
+          <span class="badge">0 Sablon</span>
+        </button>
+
+        <button class="glass-btn prof-card disabled">
+          <div class="prof-info">
+            <div class="prof-icon"><i class="fa-solid fa-code"></i></div>
+            <span class="prof-name">IT & Szoftverfejlesztés</span>
+          </div>
+          <span class="badge">0 Sablon</span>
+        </button>
+
+        <button class="glass-btn prof-card disabled">
+          <div class="prof-info">
+            <div class="prof-icon"><i class="fa-solid fa-spa"></i></div>
+            <span class="prof-name">Szépségipar & Szalon</span>
+          </div>
+          <span class="badge">0 Sablon</span>
+        </button>
+
+      </div>
+    </section>
+
+    <section class="step-section" id="step-3">
+      <h2 class="section-title">A Digitális Architektúra</h2>
+      <div class="arch-grid">
+        
+        <a href="/minimalist/index.html" class="glass-btn arch-card">
+          <div class="arch-icon"><i class="fa-solid fa-feather-pointed"></i></div>
+          <h2 class="arch-title">Minimalista</h2>
+          <p class="arch-desc">Visszafogott elegancia. Fókuszált üzenet és letisztult vonalvezetés.</p>
+        </a>
+
+        <a href="/dynamic/index.html" class="glass-btn arch-card">
+          <div class="arch-icon"><i class="fa-solid fa-wind"></i></div>
+          <h2 class="arch-title">Dinamikus</h2>
+          <p class="arch-desc">Folyékony mozgás. Élővé varázsolt felületek GSAP animációkkal.</p>
+        </a>
+
+        <a href="/web3d/index.html" class="glass-btn arch-card">
+          <div class="arch-icon"><i class="fa-solid fa-cube"></i></div>
+          <h2 class="arch-title">3D Weboldal</h2>
+          <p class="arch-desc">A jövő standardja. Térbeli interaktív WebGL környezet a maximális hatásért.</p>
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let currentStep = 1;
+
+    // Globális belépő animáció
+    gsap.from("header", { y: -30, opacity: 0, duration: 1, ease: "power3.out", delay: 0.2 });
+    gsap.from("#step-1", { y: 40, opacity: 0, duration: 1, ease: "power3.out", delay: 0.4 });
+    gsap.set("#step-1", { opacity: 1 });
+
+    function advanceToStep(nextStep, selection) {
+      // Itt menthetnéd el a kiválasztott adatokat változóba a jövőbeli routinghoz
+      console.log("Kiválasztva:", selection);
+      goToStep(nextStep);
+    }
+
+    function goToStep(targetStep) {
+      if (targetStep === currentStep) return;
+      if (targetStep > currentStep + 1 && targetStep !== 1) return; // Ne ugorhasson át kötelező lépéseket előre
+
+      const currentSection = document.getElementById(`step-${currentStep}`);
+      const targetSection = document.getElementById(`step-${targetStep}`);
+      
+      const tl = gsap.timeline();
+
+      // Kifelé úszás
+      tl.to(currentSection, {
+        opacity: 0,
+        y: -30,
+        duration: 0.4,
+        ease: "power2.in",
+        onComplete: () => {
+          currentSection.classList.remove('active');
+          currentSection.style.display = 'none';
+          
+          targetSection.style.display = 'flex';
+          targetSection.classList.add('active');
+          
+          // Breadcrumb frissítése
+          updateStepper(targetStep);
+        }
+      })
+      // Befelé úszás
+      .fromTo(targetSection, 
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
+      );
+
+      currentStep = targetStep;
+    }
+
+    function updateStepper(step) {
+      for (let i = 1; i <= 3; i++) {
+        const navItem = document.getElementById(`nav-step-${i}`);
+        navItem.classList.remove('active', 'completed');
+        
+        if (i < step) {
+          navItem.classList.add('completed');
+        } else if (i === step) {
+          navItem.classList.add('active');
+        }
+      }
+    }
+  </script>
+</body>
+</html>
