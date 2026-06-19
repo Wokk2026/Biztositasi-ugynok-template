@@ -27,13 +27,13 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:         #050510;
-      --blue:       #EC4899; /* Pink */
-      --blue-light: #F472B6; 
-      --gold:       #06B6D4; /* Cyan */
-      --gold-light: #67E8F9;
-      --text:       #FFFFFF;
-      --muted:      #71717A;
+      --bg:         #0B0F19;
+      --blue:       #3B82F6;
+      --blue-light: #60A5FA;
+      --gold:       #FBBF24;
+      --gold-light: #FDE68A;
+      --text:       #F1F5F9;
+      --muted:      #94A3B8;
     }
 
     html { scroll-behavior: smooth; }
@@ -442,9 +442,9 @@
   const colors     = new Float32Array(PARTICLE_COUNT * 3);
   const velocities = [];
 
-  const colBlue = new THREE.Color('#EC4899'); /* Neon Pink */
-  const colGold = new THREE.Color('#06B6D4'); /* Cyan */
-  const colMix  = new THREE.Color('#8B5CF6'); /* Purple */
+  const colBlue = new THREE.Color('#3B82F6');
+  const colGold = new THREE.Color('#FBBF24');
+  const colMix  = new THREE.Color('#60A5FA');
 
   const PALETTE = [colBlue, colGold, colMix];
 
@@ -735,6 +735,7 @@
     switcher.style.right = isOpen ? '0px' : '-320px';
   });
 
+  // A 20 kép logikai adatmátrixa (Nincs szükség mappákra)
   // A 30 kép logikai adatmátrixa
   const avatarData = [
     { id: '01', gender: 'man', style: 'normal' },
