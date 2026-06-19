@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kovács Péter — Biztosítási Szakértő</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark:    '#121212',
+            emerald: '#10B981',
+            zinc:    '#A1A1AA',
+          },
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #FFFFFF;
+      overflow-x: hidden;
+    }
+
+    /* ── Scrollbar ─────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #1a1a1a; }
+    ::-webkit-scrollbar-thumb { background: #10B981; border-radius: 2px; }
+
+    /* ── Noise overlay for texture ─────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── Hero ──────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 6rem 1.5rem 8rem;
+      overflow: hidden;
+    }
+
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse at center, rgba(16,185,129,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: -120px; left: 50%; transform: translateX(-50%);
+      width: 420px; height: 420px;
+      background: radial-gradient(ellipse at center, rgba(16,185,129,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* ── Avatar ────────────────────────────────────────────── */
+    .avatar-wrap {
+      position: relative;
+      width: 160px; height: 160px;
+      margin: 0 auto 2rem;
+    }
+
+    .avatar-ring {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(#10B981 0%, #059669 40%, #121212 60%, #10B981 100%);
+      animation: spin-ring 6s linear infinite;
+    }
+
+    @keyframes spin-ring {
+      to { transform: rotate(360deg); }
+    }
+
+    .avatar-inner {
+      position: relative;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: #1e1e1e;
+      border: 3px solid #121212;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-inner img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .avatar-initials {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #10B981;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .avatar-badge {
+      position: absolute;
+      bottom: 4px; right: 4px;
+      background: #10B981;
+      color: #fff;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      border: 3px solid #121212;
+      z-index: 2;
+    }
+
+    /* ── Stat strip ────────────────────────────────────────── */
+    .stat-strip {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin-top: 2.5rem;
+      width: 100%;
+      max-width: 380px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .stat-item {
+      flex: 1;
+      padding: 1rem 0.5rem;
+      text-align: center;
+      background: rgba(255,255,255,0.02);
+      position: relative;
+    }
+
+    .stat-item + .stat-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; height: 60%;
+      width: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .stat-num {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #10B981;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      color: #A1A1AA;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.3rem;
+    }
+
+    /* ── Section base ──────────────────────────────────────── */
+    .info-section {
+      padding: 5rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+      will-change: transform, opacity;
+    }
+
+    .section-inner {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #10B981;
+      margin-bottom: 1rem;
+    }
+
+    .section-eyebrow span {
+      display: inline-block;
+      width: 24px; height: 1px;
+      background: #10B981;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-body {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: #A1A1AA;
+      margin-bottom: 2rem;
+    }
+
+    /* ── Section 1 — Szakértelem ───────────────────────────── */
+    #szakertelem {
+      background: #121212;
+    }
+
+    #szakertelem::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .skill-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .skill-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .skill-name {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .skill-pct {
+      font-size: 0.75rem;
+      color: #10B981;
+      font-weight: 600;
+    }
+
+    .skill-bar-bg {
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #059669, #10B981);
+      border-radius: 999px;
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    /* ── Section 2 — Portfólió ─────────────────────────────── */
+    #portfolio {
+      background: #161616;
+    }
+
+    #portfolio::before {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(16,185,129,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .portfolio-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 1.25rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transition: border-color 0.3s, background 0.3s;
+      cursor: default;
+    }
+
+    .portfolio-card:hover {
+      border-color: rgba(16,185,129,0.3);
+      background: rgba(16,185,129,0.04);
+    }
+
+    .portfolio-card .card-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: rgba(16,185,129,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      color: #10B981;
+    }
+
+    .portfolio-card .card-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .portfolio-card .card-sub {
+      font-size: 0.65rem;
+      color: #A1A1AA;
+    }
+
+    .portfolio-card .card-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #10B981;
+      margin-top: auto;
+    }
+
+    /* ── Section 3 — Védelem ───────────────────────────────── */
+    #vedelem {
+      background: #121212;
+    }
+
+    #vedelem::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(16,185,129,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .protection-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .protection-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.1rem 1.25rem;
+      background: rgba(255,255,255,0.02);
+      transition: background 0.25s;
+      cursor: default;
+    }
+
+    .protection-item:hover {
+      background: rgba(16,185,129,0.05);
+    }
+
+    .protection-item + .protection-item {
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .prot-icon {
+      width: 38px; height: 38px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: rgba(16,185,129,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+      color: #10B981;
+    }
+
+    .prot-text { flex: 1; }
+
+    .prot-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .prot-desc {
+      font-size: 0.68rem;
+      color: #A1A1AA;
+      margin-top: 0.1rem;
+    }
+
+    .prot-arrow {
+      font-size: 0.75rem;
+      color: #10B981;
+      opacity: 0.6;
+    }
+
+    /* ── Testimonial ───────────────────────────────────────── */
+    .testimonial-block {
+      background: rgba(16,185,129,0.06);
+      border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .testimonial-quote {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: #e4e4e7;
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .author-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(16,185,129,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #10B981;
+      flex-shrink: 0;
+    }
+
+    .author-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .author-role {
+      font-size: 0.65rem;
+      color: #A1A1AA;
+    }
+
+    /* ── Social strip ──────────────────────────────────────── */
+    #social {
+      padding: 3rem 1.5rem 9rem;
+    }
+
+    .social-title {
+      text-align: center;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #A1A1AA;
+      margin-bottom: 1.5rem;
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .social-icon {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      color: #A1A1AA;
+      text-decoration: none;
+      transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.2s;
+    }
+
+    .social-icon:hover {
+      background: rgba(16,185,129,0.12);
+      color: #10B981;
+      border-color: rgba(16,185,129,0.3);
+      transform: translateY(-2px);
+    }
+
+    /* ── Contact bar ───────────────────────────────────────── */
+    #contact-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 50;
+      padding: 1rem 1.5rem 1.5rem;
+      background: linear-gradient(to top, #121212 60%, transparent);
+      transform: translateY(100%);
+      will-change: transform;
+    }
+
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+      padding: 1rem 1.5rem;
+      background: #10B981;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .contact-btn:hover {
+      background: #0ea370;
+      transform: scale(0.99);
+    }
+
+    .contact-btn:active {
+      transform: scale(0.97);
+    }
+
+    .contact-btn i {
+      font-size: 1rem;
+    }
+
+    /* ── Divider line ──────────────────────────────────────── */
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(16,185,129,0.25), transparent);
+      margin: 0 auto;
+      max-width: 480px;
+    }
+
+    /* ── Utility: glow text ────────────────────────────────── */
+    .text-emerald-glow {
+      color: #10B981;
+      text-shadow: 0 0 24px rgba(16,185,129,0.35);
+    }
+
+    /* ── Reduced motion ────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .avatar-ring { animation: none; }
+      .skill-bar-fill { transition: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════════
+       HERO SECTION
+  ══════════════════════════════════════════════ -->
+  <section id="hero" aria-label="Bemutatkozás">
+    <div class="hero-glow" aria-hidden="true"></div>
+
+    <!-- Avatar -->
+    <div class="avatar-wrap" id="hero-avatar">
+      <div class="avatar-ring" aria-hidden="true"></div>
+      <div class="avatar-inner">
+        <!-- Replace src with a real photo URL if available -->
+        <!-- <img src="photo.jpg" alt="Kovács Péter profilképe" /> -->
+        <span class="avatar-initials">KP</span>
+      </div>
+      <div class="avatar-badge" aria-label="Ellenőrzött szakértő">
+        <i class="fa-solid fa-check" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <!-- Name & title -->
+    <div id="hero-text" style="text-align:center; width:100%; max-width:380px;">
+      <p id="hero-label" style="font-size:0.68rem; text-transform:uppercase; letter-spacing:0.18em; color:#10B981; font-weight:600; margin-bottom:0.6rem;">
+        Biztosítási Tanácsadó
+      </p>
+      <h1 id="hero-name" style="font-size: clamp(2rem, 8vw, 2.8rem); font-weight:800; letter-spacing:-0.03em; line-height:1.1; margin-bottom:0.5rem;">
+        Kovács Péter
+      </h1>
+      <h2 id="hero-tagline" style="font-size:clamp(0.95rem, 3vw, 1.15rem); font-weight:400; color:#A1A1AA; line-height:1.5; margin-bottom:0.25rem;">
+        12 év tapasztalat · <span class="text-emerald-glow">Magyar Életbiztosító</span>
+      </h2>
+      <p id="hero-sub" style="font-size:0.8rem; color:#52525b; margin-top:0.25rem;">
+        Budapest & Pest megye
+      </p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-strip" id="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">850+</div>
+        <div class="stat-label">Ügyfél</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">12</div>
+        <div class="stat-label">Év tapasz.</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Elégedett</div>
+      </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div id="hero-scroll" style="position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:0.4rem; opacity:0.4;">
+      <span style="font-size:0.6rem; text-transform:uppercase; letter-spacing:0.15em; color:#A1A1AA;">Görgessen</span>
+      <i class="fa-solid fa-chevron-down" style="color:#10B981; font-size:0.75rem; animation: bounce 2s ease-in-out infinite;" aria-hidden="true"></i>
+    </div>
+  </section>
+
+  <style>
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+  </style>
+
+  <!-- ══════════════════════════════════════════════
+       SECTION 1 — SZAKÉRTELEM
+  ══════════════════════════════════════════════ -->
+  <div class="section-divider" aria-hidden="true"></div>
+
+  <section id="szakertelem" class="info-section" aria-label="Szakértelem">
+    <div class="section-inner">
+      <p class="section-eyebrow"><span aria-hidden="true"></span>Kompetenciák</p>
+      <h2 class="section-title">
+        Széleskörű <br /><em class="text-emerald-glow" style="font-style:normal;">Szakértelem</em>
+      </h2>
+      <p class="section-body">
+        Minden biztosítási területen otthonosan mozgok. Személyre szabott megoldásokat kínálok egyéni ügyfelektől a vállalati partnerekig.
+      </p>
+
+      <div class="skill-list">
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name"><i class="fa-solid fa-heart-pulse" style="color:#10B981; margin-right:0.5rem; font-size:0.7rem;" aria-hidden="true"></i>Életbiztosítás</span>
+            <span class="skill-pct">97%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="97"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name"><i class="fa-solid fa-car" style="color:#10B981; margin-right:0.5rem; font-size:0.7rem;" aria-hidden="true"></i>Gépjármű-biztosítás</span>
+            <span class="skill-pct">92%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="92"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name"><i class="fa-solid fa-house" style="color:#10B981; margin-right:0.5rem; font-size:0.7rem;" aria-hidden="true"></i>Lakásbiztosítás</span>
+            <span class="skill-pct">95%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="95"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name"><i class="fa-solid fa-briefcase" style="color:#10B981; margin-right:0.5rem; font-size:0.7rem;" aria-hidden="true"></i>Vállalati megoldások</span>
+            <span class="skill-pct">88%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="88"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-meta">
+            <span class="skill-name"><i class="fa-solid fa-seedling" style="color:#10B981; margin-right:0.5rem; font-size:0.7rem;" aria-hidden="true"></i>Befektetési biztosítás</span>
+            <span class="skill-pct">90%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-width="90"></div></div>
+        </div>
+      </div>
+
+      <!-- Testimonial -->
+      <div class="testimonial-block">
+        <p class="testimonial-quote">
+          „Péter volt az egyetlen tanácsadó, aki valóban megértette a mi helyzetünket, és olyan csomagot állított össze, ami tényleg illik hozzánk. Azóta négy éve ügyfelei vagyunk."
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">BM</div>
+          <div>
+            <div class="author-name">Balogh Márton</div>
+            <div class="author-role">KKV-vezető, Budapest</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       SECTION 2 — PORTFÓLIÓ
+  ══════════════════════════════════════════════ -->
+  <div class="section-divider" aria-hidden="true"></div>
+
+  <section id="portfolio" class="info-section" aria-label="Portfólió">
+    <div class="section-inner">
+      <p class="section-eyebrow"><span aria-hidden="true"></span>Eredmények</p>
+      <h2 class="section-title">
+        Meggyőző <br /><em class="text-emerald-glow" style="font-style:normal;">Portfólió</em>
+      </h2>
+      <p class="section-body">
+        Számok, amelyek önmagukért beszélnek. Ügyfeleim bizalmát szerztem meg évek alatt — ők most a legjobb referenciáim.
+      </p>
+
+      <div class="portfolio-grid">
+        <div class="portfolio-card">
+          <div class="card-icon"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
+          <div class="card-label">Aktív ügyfelek</div>
+          <div class="card-sub">Folyamatos kapcsolat</div>
+          <div class="card-val">850+</div>
+        </div>
+        <div class="portfolio-card">
+          <div class="card-icon"><i class="fa-solid fa-file-shield" aria-hidden="true"></i></div>
+          <div class="card-label">Aktív kötvény</div>
+          <div class="card-sub">Kezelt biztosítások</div>
+          <div class="card-val">1 400+</div>
+        </div>
+        <div class="portfolio-card">
+          <div class="card-icon"><i class="fa-solid fa-handshake" aria-hidden="true"></i></div>
+          <div class="card-label">Sikeres kárigény</div>
+          <div class="card-sub">Teljesítési arány</div>
+          <div class="card-val">99%</div>
+        </div>
+        <div class="portfolio-card">
+          <div class="card-icon"><i class="fa-solid fa-award" aria-hidden="true"></i></div>
+          <div class="card-label">Díjak & elismerések</div>
+          <div class="card-sub">Iparági rangsor</div>
+          <div class="card-val">Top 3%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       SECTION 3 — VÉDELEM
+  ══════════════════════════════════════════════ -->
+  <div class="section-divider" aria-hidden="true"></div>
+
+  <section id="vedelem" class="info-section" aria-label="Védelmi megoldások">
+    <div class="section-inner">
+      <p class="section-eyebrow"><span aria-hidden="true"></span>Termékek</p>
+      <h2 class="section-title">
+        Átfogó <br /><em class="text-emerald-glow" style="font-style:normal;">Védelem</em>
+      </h2>
+      <p class="section-body">
+        Az élet minden területére kiterjedő biztosítási megoldások — egyéb formáktól eltérően én nem csomagokat, hanem élethelyzeteket látok.
+      </p>
+
+      <div class="protection-list">
+        <div class="protection-item">
+          <div class="prot-icon"><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i></div>
+          <div class="prot-text">
+            <div class="prot-name">Élet &amp; egészség</div>
+            <div class="prot-desc">Haláleseti, balesetbiztosítás, kritikus betegség</div>
+          </div>
+          <i class="fa-solid fa-chevron-right prot-arrow" aria-hidden="true"></i>
+        </div>
+        <div class="protection-item">
+          <div class="prot-icon"><i class="fa-solid fa-car-side" aria-hidden="true"></i></div>
+          <div class="prot-text">
+            <div class="prot-name">Gépjármű</div>
+            <div class="prot-desc">KGFB, CASCO, asszisztencia</div>
+          </div>
+          <i class="fa-solid fa-chevron-right prot-arrow" aria-hidden="true"></i>
+        </div>
+        <div class="protection-item">
+          <div class="prot-icon"><i class="fa-solid fa-house-chimney" aria-hidden="true"></i></div>
+          <div class="prot-text">
+            <div class="prot-name">Ingatlan &amp; vagyon</div>
+            <div class="prot-desc">Lakás, nyaraló, irodaépület</div>
+          </div>
+          <i class="fa-solid fa-chevron-right prot-arrow" aria-hidden="true"></i>
+        </div>
+        <div class="protection-item">
+          <div class="prot-icon"><i class="fa-solid fa-building" aria-hidden="true"></i></div>
+          <div class="prot-text">
+            <div class="prot-name">Vállalati csomag</div>
+            <div class="prot-desc">Felelősség, vagyonvédelem, munkavállalói benefit</div>
+          </div>
+          <i class="fa-solid fa-chevron-right prot-arrow" aria-hidden="true"></i>
+        </div>
+        <div class="protection-item">
+          <div class="prot-icon"><i class="fa-solid fa-plane-departure" aria-hidden="true"></i></div>
+          <div class="prot-text">
+            <div class="prot-name">Utasbiztosítás</div>
+            <div class="prot-desc">Éves bérlet és egyszeri út, egész Európára</div>
+          </div>
+          <i class="fa-solid fa-chevron-right prot-arrow" aria-hidden="true"></i>
+        </div>
+        <div class="protection-item">
+          <div class="prot-icon"><i class="fa-solid fa-piggy-bank" aria-hidden="true"></i></div>
+          <div class="prot-text">
+            <div class="prot-name">Nyugdíj &amp; megtakarítás</div>
+            <div class="prot-desc">Befektetési egységhez kötött életbiztosítás</div>
+          </div>
+          <i class="fa-solid fa-chevron-right prot-arrow" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       SOCIAL / CONTACT LINKS
+  ══════════════════════════════════════════════ -->
+  <div class="section-divider" aria-hidden="true"></div>
+
+  <section id="social" aria-label="Kapcsolat és közösségi oldalak">
+    <p class="social-title">Elér engem itt is</p>
+    <div class="social-icons">
+      <a href="tel:+36301234567" class="social-icon" aria-label="Telefon">
+        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+      </a>
+      <a href="mailto:kovacs.peter@biztosito.hu" class="social-icon" aria-label="E-mail">
+        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+      </a>
+      <a href="#" class="social-icon" aria-label="LinkedIn">
+        <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+      </a>
+      <a href="#" class="social-icon" aria-label="Facebook">
+        <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+      </a>
+      <a href="#" class="social-icon" aria-label="WhatsApp">
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+      </a>
+    </div>
+    <p style="text-align:center; font-size:0.65rem; color:#3f3f46; margin-top:2.5rem;">
+      © 2025 Kovács Péter · Biztosítási Tanácsadó · MNB engedélyszám: HU-1234
+    </p>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       FLOATING CONTACT BAR
+  ══════════════════════════════════════════════ -->
+  <div id="contact-bar" role="complementary" aria-label="Gyors kapcsolatfelvétel">
+    <a href="tel:+36301234567" class="contact-btn">
+      <i class="fa-solid fa-phone-volume" aria-hidden="true"></i>
+      Azonnali Kapcsolat
+    </a>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       GSAP ANIMATIONS
+  ══════════════════════════════════════════════ -->
+  <script>
+    (function () {
+      gsap.registerPlugin(ScrollTrigger);
+
+      /* ── 1. Hero entrance timeline ──────────────────────── */
+      const heroTL = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      heroTL
+        .from('#hero-avatar', {
+          y: 60, opacity: 0, duration: 0.9, delay: 0.15
+        })
+        .from('#hero-label', {
+          y: 30, opacity: 0, duration: 0.65
+        }, '-=0.45')
+        .from('#hero-name', {
+          y: 40, opacity: 0, duration: 0.7
+        }, '-=0.5')
+        .from('#hero-tagline', {
+          y: 30, opacity: 0, duration: 0.6
+        }, '-=0.45')
+        .from('#hero-sub', {
+          y: 20, opacity: 0, duration: 0.5
+        }, '-=0.4')
+        .from('#hero-stats', {
+          y: 30, opacity: 0, duration: 0.65, scale: 0.97
+        }, '-=0.35')
+        .from('#hero-scroll', {
+          opacity: 0, duration: 0.5
+        }, '-=0.1');
+
+      /* ── 2. ScrollTrigger for info sections ─────────────── */
+      const sections = ['#szakertelem', '#portfolio', '#vedelem'];
+
+      sections.forEach(function (sel) {
+        gsap.fromTo(
+          sel,
+          { opacity: 0, scale: 0.96, y: 40 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.85,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: sel,
+              start: 'top 82%',
+              end: 'top 40%',
+              toggleActions: 'play none none none',
+            }
+          }
+        );
+      });
+
+      /* ── 3. Skill bars animate on scroll ────────────────── */
+      ScrollTrigger.create({
+        trigger: '#szakertelem',
+        start: 'top 75%',
+        once: true,
+        onEnter: function () {
+          document.querySelectorAll('.skill-bar-fill').forEach(function (bar) {
+            bar.style.width = bar.dataset.width + '%';
+          });
+        }
+      });
+
+      /* ── 4. Portfolio cards stagger ─────────────────────── */
+      gsap.fromTo(
+        '#portfolio .portfolio-card',
+        { opacity: 0, y: 30, scale: 0.95 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: '#portfolio',
+            start: 'top 75%',
+            toggleActions: 'play none none none',
+          }
+        }
+      );
+
+      /* ── 5. Protection list items stagger ───────────────── */
+      gsap.fromTo(
+        '#vedelem .protection-item',
+        { opacity: 0, x: -20 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          stagger: 0.08,
+          scrollTrigger: {
+            trigger: '#vedelem',
+            start: 'top 75%',
+            toggleActions: 'play none none none',
+          }
+        }
+      );
+
+      /* ── 6. Testimonial fade ────────────────────────────── */
+      gsap.fromTo(
+        '.testimonial-block',
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.testimonial-block',
+            start: 'top 82%',
+            toggleActions: 'play none none none',
+          }
+        }
+      );
+
+      /* ── 7. Social icons stagger ────────────────────────── */
+      gsap.fromTo(
+        '.social-icon',
+        { opacity: 0, y: 20, scale: 0.85 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.5,
+          ease: 'back.out(1.4)',
+          stagger: 0.07,
+          scrollTrigger: {
+            trigger: '#social',
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          }
+        }
+      );
+
+      /* ── 8. Floating contact bar slides up after hero ───── */
+      ScrollTrigger.create({
+        trigger: '#hero',
+        start: 'bottom 80%',
+        onEnter: function () {
+          gsap.to('#contact-bar', {
+            y: 0,
+            duration: 0.65,
+            ease: 'power3.out'
+          });
+        },
+        onLeaveBack: function () {
+          gsap.to('#contact-bar', {
+            y: '100%',
+            duration: 0.45,
+            ease: 'power2.in'
+          });
+        }
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
