@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VarjaSS — Web Designer</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <style>
+    /* ─── Reset & Root ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --void:    #050505;
+      --silver:  #D1D5DB;
+      --crimson: #DC2626;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: var(--void);
+      font-family: 'Inter', sans-serif;
+      color: var(--silver);
+    }
+
+    /* ─── Layer 1: Background Menu ─────────────────────────────── */
+    #background-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 2rem;
+      background: var(--void);
+    }
+
+    /* Subtle radial atmosphere behind cards */
+    #background-menu::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 60%, rgba(220,38,38,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ─── Glassmorphism Cards ──────────────────────────────────── */
+    .category-card {
+      position: relative;
+      opacity: 0;
+      transform: translateY(50px);
+      flex: 1;
+      max-width: 320px;
+      min-height: 420px;
+      border-radius: 1.25rem;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      text-decoration: none;
+      color: var(--silver);
+      overflow: hidden;
+      cursor: pointer;
+
+      background: rgba(255,255,255,.03);
+      backdrop-filter: blur(18px) saturate(120%);
+      -webkit-backdrop-filter: blur(18px) saturate(120%);
+      border: 1px solid rgba(209,213,219,.10);
+      box-shadow:
+        0 0 0 0.5px rgba(209,213,219,.05) inset,
+        0 32px 80px rgba(0,0,0,.7);
+
+      transition: border-color .35s ease, box-shadow .35s ease, transform .35s ease;
+    }
+
+    .category-card:hover {
+      border-color: rgba(220,38,38,.35);
+      box-shadow:
+        0 0 0 0.5px rgba(220,38,38,.15) inset,
+        0 0 40px rgba(220,38,38,.08),
+        0 32px 80px rgba(0,0,0,.8);
+      transform: translateY(-6px);
+    }
+
+    .category-card:hover .card-number { color: var(--crimson); }
+    .category-card:hover .card-arrow  { color: var(--crimson); transform: translateX(4px); }
+
+    /* Card inner chrome line */
+    .category-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 2rem; right: 2rem;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(209,213,219,.2), transparent);
+    }
+
+    .card-number {
+      font-family: 'Cinzel', serif;
+      font-size: .75rem;
+      letter-spacing: .25em;
+      color: rgba(209,213,219,.35);
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      transition: color .35s ease;
+    }
+
+    .card-icon {
+      width: 52px; height: 52px;
+      margin-bottom: 1.5rem;
+      opacity: .55;
+    }
+
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: .04em;
+      margin-bottom: .75rem;
+    }
+
+    .card-desc {
+      font-size: .8rem;
+      font-weight: 300;
+      color: rgba(209,213,219,.5);
+      line-height: 1.6;
+      letter-spacing: .02em;
+      margin-bottom: 1.75rem;
+    }
+
+    .card-arrow {
+      font-size: .85rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: rgba(209,213,219,.4);
+      transition: color .35s ease, transform .35s ease;
+      display: inline-block;
+    }
+
+    /* Card: decorative corner accent */
+    .card-corner {
+      position: absolute;
+      top: 1.25rem; right: 1.25rem;
+      width: 18px; height: 18px;
+      border-top: 1px solid rgba(220,38,38,.3);
+      border-right: 1px solid rgba(220,38,38,.3);
+    }
+
+    /* ─── Layer 2: The Gate ────────────────────────────────────── */
+    #gate-left,
+    #gate-right {
+      position: fixed;
+      top: 0;
+      width: 50vw;
+      height: 100vh;
+      background: var(--void);
+      z-index: 40;
+    }
+
+    #gate-left  { left: 0; }
+    #gate-right { right: 0; }
+
+    /* Subtle inner-edge gradient to sell the split */
+    #gate-left::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 120px; height: 100%;
+      background: linear-gradient(to right, transparent, rgba(209,213,219,.025));
+      pointer-events: none;
+    }
+
+    #gate-right::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 120px; height: 100%;
+      background: linear-gradient(to left, transparent, rgba(209,213,219,.025));
+      pointer-events: none;
+    }
+
+    /* ─── Layer 3: The Centerpiece ─────────────────────────────── */
+    #centerpiece {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      pointer-events: none;
+    }
+
+    /* VarjaSS Logotype */
+    #logo {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: .22em;
+      color: var(--silver);
+      text-transform: uppercase;
+      user-select: none;
+      transition: color .3s ease, text-shadow .3s ease;
+      line-height: 1;
+    }
+
+    #logo-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(.6rem, 1vw, .75rem);
+      font-weight: 300;
+      letter-spacing: .6em;
+      color: rgba(209,213,219,.35);
+      text-transform: uppercase;
+      text-align: center;
+      margin-top: -.5rem;
+    }
+
+    /* ─── Crow SVG ─────────────────────────────────────────────── */
+    #crow-svg {
+      width: clamp(200px, 28vw, 340px);
+      height: auto;
+      filter: drop-shadow(0 0 0px transparent);
+      transition: filter .3s ease;
+    }
+
+    /* The interactive Eye */
+    #crow-eye {
+      cursor: pointer;
+      pointer-events: all;
+      transition: stroke .25s ease, fill .25s ease, filter .25s ease;
+    }
+
+    #crow-eye:hover {
+      stroke: var(--crimson) !important;
+      fill: rgba(220,38,38,.15);
+      filter: drop-shadow(0 0 6px #DC2626);
+    }
+
+    /* Eye pupil (inner dot) */
+    #crow-pupil {
+      pointer-events: none;
+      transition: fill .25s ease;
+    }
+
+    /* ─── Hint text ────────────────────────────────────────────── */
+    #hint {
+      font-family: 'Inter', sans-serif;
+      font-size: .65rem;
+      font-weight: 300;
+      letter-spacing: .35em;
+      color: rgba(209,213,219,.18);
+      text-transform: uppercase;
+      margin-top: .5rem;
+      user-select: none;
+      animation: hint-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes hint-pulse {
+      0%, 100% { opacity: .18; }
+      50%       { opacity: .45; }
+    }
+
+    /* ─── Reduced Motion ───────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      #hint { animation: none; }
+      .category-card { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════
+       LAYER 1 — Background Menu
+  ══════════════════════════════════════════════════════════ -->
+  <section id="background-menu" aria-label="Portfólió kategóriák">
+
+    <!-- Card 1: Minimalista -->
+    <a href="/minimalist" class="category-card" aria-label="Minimalista webdesign munkák">
+      <div class="card-corner"></div>
+      <div class="card-number">01</div>
+
+      <!-- Icon: clean lines -->
+      <svg class="card-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="8" y="8" width="36" height="36" rx="2" stroke="#D1D5DB" stroke-width="1.2"/>
+        <line x1="8" y1="20" x2="44" y2="20" stroke="#D1D5DB" stroke-width="1.2"/>
+        <line x1="17" y1="30" x2="35" y2="30" stroke="#D1D5DB" stroke-width="1" stroke-dasharray="2 3"/>
+        <line x1="17" y1="36" x2="29" y2="36" stroke="#D1D5DB" stroke-width="1" stroke-dasharray="2 3"/>
+      </svg>
+
+      <h2 class="card-title">Minimalista</h2>
+      <p class="card-desc">Visszafogott elegancia. Ahol minden elem szándékos, és a csend is kommunikál.</p>
+      <span class="card-arrow">Belépés &rarr;</span>
+    </a>
+
+    <!-- Card 2: Dinamikus -->
+    <a href="/dynamic" class="category-card" aria-label="Dinamikus webdesign munkák">
+      <div class="card-corner"></div>
+      <div class="card-number">02</div>
+
+      <!-- Icon: motion paths -->
+      <svg class="card-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M10 40 C14 28, 22 24, 30 16 S42 10 44 10" stroke="#D1D5DB" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M10 40 L16 34 L10 28" stroke="#D1D5DB" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="44" cy="10" r="3" stroke="#D1D5DB" stroke-width="1.2"/>
+        <line x1="6"  y1="44" x2="46" y2="44" stroke="#D1D5DB" stroke-width=".8" stroke-dasharray="3 4" opacity=".4"/>
+      </svg>
+
+      <h2 class="card-title">Dinamikus</h2>
+      <p class="card-desc">Mozgás, energia, hatás. Oldalak, amelyek élnek — és magukba vonják a látogatót.</p>
+      <span class="card-arrow">Belépés &rarr;</span>
+    </a>
+
+    <!-- Card 3: 3D Weboldal -->
+    <a href="/web3d" class="category-card" aria-label="3D webdesign munkák">
+      <div class="card-corner"></div>
+      <div class="card-number">03</div>
+
+      <!-- Icon: 3D cube wireframe -->
+      <svg class="card-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <polygon points="26,8 44,18 44,34 26,44 8,34 8,18" stroke="#D1D5DB" stroke-width="1.2" stroke-linejoin="round"/>
+        <line x1="26" y1="8"  x2="26" y2="26" stroke="#D1D5DB" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="8"  y1="18" x2="26" y2="26" stroke="#D1D5DB" stroke-width="1" stroke-dasharray="2 2"/>
+        <line x1="44" y1="18" x2="26" y2="26" stroke="#D1D5DB" stroke-width="1" stroke-dasharray="2 2"/>
+      </svg>
+
+      <h2 class="card-title">3D Weboldal</h2>
+      <p class="card-desc">Mélység és tér a képernyőn. WebGL-alapú élmények, ahol a dimenzió az üzenet.</p>
+      <span class="card-arrow">Belépés &rarr;</span>
+    </a>
+
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       LAYER 2 — The Gate (Left + Right panels)
+  ══════════════════════════════════════════════════════════ -->
+  <div id="gate-left"  aria-hidden="true"></div>
+  <div id="gate-right" aria-hidden="true"></div>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       LAYER 3 — The Centerpiece
+  ══════════════════════════════════════════════════════════ -->
+  <div id="centerpiece" role="main" aria-label="VarjaSS portfólió bevezető">
+
+    <!-- Logotype -->
+    <h1 id="logo" aria-label="VarjaSS">VarjaSS</h1>
+    <p id="logo-sub" aria-hidden="true">Web Designer</p>
+
+    <!-- ─── Geometric Crow Head SVG ──────────────────────────── -->
+    <!--
+      A forward-facing geometric crow head built entirely from
+      straight-edge polygons and precise arcs. Stroke only, no fill.
+      The eye (#crow-eye) is the interactive trigger.
+    -->
+    <svg
+      id="crow-svg"
+      viewBox="0 0 400 400"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Geometrikus varjúfej — kattints a szemére"
+    >
+      <polygon
+        points="140,80 200,100 260,150 360,180 350,200 240,210 120,320 40,250 60,130"
+        stroke="#D1D5DB" stroke-width="2" stroke-linejoin="round"
+      />
+      
+      <line x1="140" y1="80"  x2="190" y2="140" stroke="#D1D5DB" stroke-width="1" opacity="0.4"/>
+      <line x1="200" y1="100" x2="190" y2="140" stroke="#D1D5DB" stroke-width="1" opacity="0.4"/>
+      <line x1="260" y1="150" x2="190" y2="140" stroke="#D1D5DB" stroke-width="1" opacity="0.4"/>
+      <line x1="240" y1="210" x2="190" y2="140" stroke="#D1D5DB" stroke-width="1" opacity="0.4"/>
+      <line x1="120" y1="320" x2="190" y2="140" stroke="#D1D5DB" stroke-width="1" opacity="0.4"/>
+      <line x1="60"  y1="130" x2="190" y2="140" stroke="#D1D5DB" stroke-width="1" opacity="0.4"/>
+
+      <line x1="360" y1="180" x2="240" y2="195" stroke="#D1D5DB" stroke-width="1.5" opacity="0.7"/>
+
+      <circle
+        id="crow-eye"
+        cx="190" cy="140" r="16"
+        stroke="#D1D5DB" stroke-width="2"
+        fill="rgba(5,5,5,0.01)"
+        tabindex="0"
+        role="button"
+        style="cursor: pointer; pointer-events: all; transition: all 0.3s ease;"
+      />
+      <circle
+        id="crow-pupil"
+        cx="190" cy="140" r="6"
+        fill="#D1D5DB"
+        style="pointer-events:none; transition: all 0.3s ease;"
+      />
+    </svg>
+    <!-- /crow-svg -->
+
+    <!-- Interaction hint -->
+    <p id="hint" aria-label="Kattints a varjú szemére">▴ &nbsp; Érintsd a szemet &nbsp; ▴</p>
+
+  </div>
+  <!-- /centerpiece -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       GSAP Animation Logic
+  ══════════════════════════════════════════════════════════ -->
+  <script>
+    (function () {
+      'use strict';
+
+      const eye        = document.getElementById('crow-eye');
+      const pupil      = document.getElementById('crow-pupil');
+      const logo       = document.getElementById('logo');
+      const hint       = document.getElementById('hint');
+      const centerpiece = document.getElementById('centerpiece');
+      const gateLeft   = document.getElementById('gate-left');
+      const gateRight  = document.getElementById('gate-right');
+
+      let triggered = false;
+
+      // Belépő animáció (finom beúszás)
+      gsap.from(centerpiece, { duration: 1.8, opacity: 0, y: 18, ease: 'power3.out', delay: .3 });
+
+      function openGate(e) {
+        if (triggered) return;
+        triggered = true;
+
+        eye.style.cursor = 'default';
+        eye.style.pointerEvents = 'none';
+
+        // 1. Vércsepp (Ripple) effekt generálása a kattintás helyén
+        const clientX = e.clientX || window.innerWidth / 2;
+        const clientY = e.clientY || window.innerHeight / 2;
+        
+        const ripple = document.createElement('div');
+        ripple.style.position = 'fixed';
+        ripple.style.left = clientX + 'px';
+        ripple.style.top = clientY + 'px';
+        ripple.style.width = '20px';
+        ripple.style.height = '20px';
+        ripple.style.border = '2px solid #DC2626';
+        ripple.style.borderRadius = '50%';
+        ripple.style.transform = 'translate(-50%, -50%)';
+        ripple.style.zIndex = '60'; // A kapu és a logó között
+        ripple.style.pointerEvents = 'none';
+        document.body.appendChild(ripple);
+
+        // Ripple animáció
+        gsap.to(ripple, {
+          duration: 1.2,
+          scale: 25,
+          opacity: 0,
+          borderWidth: '10px',
+          ease: "power2.out",
+          onComplete: () => ripple.remove()
+        });
+
+        const tl = gsap.timeline();
+
+        // 2. Szem és logó felizzik vörösen
+        tl.to(eye, { duration: 0.3, attr: { stroke: '#DC2626', fill: 'rgba(220,38,38,0.2)' }, filter: 'drop-shadow(0 0 12px #DC2626)' })
+          .to(pupil, { duration: 0.3, attr: { fill: '#DC2626' } }, '<')
+          .to('#crow-svg', { duration: 0.4, filter: 'drop-shadow(0 0 16px rgba(220,38,38,0.4))', ease: 'power2.out' }, '<')
+          .to(logo, { duration: 0.4, color: '#DC2626', textShadow: '0 0 30px rgba(220,38,38,0.8)', ease: 'power2.out' }, '<')
+          .to(hint, { duration: 0.3, opacity: 0, ease: 'power1.in' }, '<')
+          
+          // 3. Drámai kivárás (nincs addPause, csak csúsztatás!)
+          .to(centerpiece, { duration: 0.5, opacity: 0, y: -15, ease: 'power2.in' }, '+=0.4')
+          
+          // 4. Kapuk kettényílnak
+          .to(gateLeft, { duration: 1.5, x: '-100vw', ease: 'power4.inOut' }, '+=0.1')
+          .to(gateRight, { duration: 1.5, x: '100vw', ease: 'power4.inOut' }, '<')
+          
+          // 5. Átnavigálás a kategóriákhoz a kapunyitás legvégén
+          .call(() => {
+            // Itt hozzuk létre majd a kategoriak.html fájlt!
+            window.location.href = 'kategoriak.html'; 
+          });
+      }
+
+      eye.addEventListener('click', openGate);
+      eye.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openGate(e);
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
+```
