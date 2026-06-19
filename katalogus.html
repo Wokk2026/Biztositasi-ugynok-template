@@ -396,10 +396,19 @@
   <script>
     let currentStep = 1;
 
-    // Globális belépő animáció
-    gsap.from("header", { y: -30, opacity: 0, duration: 1, ease: "power3.out", delay: 0.2 });
-    gsap.from("#step-1", { y: 40, opacity: 0, duration: 1, ease: "power3.out", delay: 0.4 });
-    gsap.set("#step-1", { opacity: 1 });
+    // Globális belépő animáció (Javított, szinkronizált GSAP Timeline)
+    const initTl = gsap.timeline();
+    
+    initTl.fromTo("header", 
+      { y: -30, opacity: 0 }, 
+      { y: 0, opacity: 1, duration: 1, ease: "power3.out" }, 
+      0.2
+    )
+    .fromTo("#step-1", 
+      { y: 40, opacity: 0 }, 
+      { y: 0, opacity: 1, duration: 1, ease: "power3.out" }, 
+      0.4
+    );
 
     function advanceToStep(nextStep, selection) {
       // Itt menthetnéd el a kiválasztott adatokat változóba a jövőbeli routinghoz
