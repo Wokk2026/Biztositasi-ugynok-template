@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Insurance Advisor — Horizontal Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --charcoal:#18181B;
+  --charcoal-light:#27272A;
+  --charcoal-mid:#3F3F46;
+  --orange:#F97316;
+  --orange-dim:rgba(249,115,22,0.15);
+  --orange-glow:rgba(249,115,22,0.35);
+  --white:#FAFAFA;
+  --muted:#A1A1AA;
+  --syne:'Syne',sans-serif;
+  --inter:'Inter',sans-serif;
+}
+html{scroll-behavior:auto;}
+body{
+  background:var(--charcoal);
+  color:var(--white);
+  font-family:var(--inter);
+  overflow-x:hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--charcoal-light);}
+::-webkit-scrollbar-thumb{background:var(--orange);border-radius:2px;}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.4;
+}
+
+/* ── SECTION SHARED ── */
+section{position:relative;z-index:1;}
+
+/* ══════════════════════════
+   HERO SECTION
+══════════════════════════ */
+#hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  gap:0;
+  overflow:hidden;
+}
+.hero-left{
+  padding:80px 60px 80px 80px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  position:relative;
+}
+.hero-right{
+  position:relative;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--charcoal-light);
+  overflow:hidden;
+}
+.hero-right::before{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(249,115,22,0.08) 0%,transparent 60%);
+}
+
+/* avatar block */
+.avatar-frame{
+  position:relative;
+  width:340px;height:340px;
+  flex-shrink:0;
+}
+.avatar-frame img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+  transition:opacity 0.2s ease;
+}
+.avatar-corner{
+  position:absolute;
+  width:24px;height:24px;
+  border-color:var(--orange);
+  border-style:solid;
+}
+.corner-tl{top:-6px;left:-6px;border-width:2px 0 0 2px;}
+.corner-tr{top:-6px;right:-6px;border-width:2px 2px 0 0;}
+.corner-bl{bottom:-6px;left:-6px;border-width:0 0 2px 2px;}
+.corner-br{bottom:-6px;right:-6px;border-width:0 2px 2px 0;}
+
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--orange-dim);
+  border:1px solid var(--orange-glow);
+  border-radius:2px;
+  padding:6px 14px;
+  font-family:var(--inter);
+  font-size:0.72rem;font-weight:600;
+  color:var(--orange);
+  letter-spacing:0.1em;text-transform:uppercase;
+  margin-bottom:24px;
+  width:fit-content;
+}
+.hero-tag .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--orange);
+  animation:blink 1.5s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+
+h1.hero-title{
+  font-family:var(--syne);
+  font-size:clamp(2.4rem,4vw,3.4rem);
+  font-weight:800;
+  line-height:1.08;
+  letter-spacing:-0.02em;
+  color:var(--white);
+  margin-bottom:12px;
+}
+h1.hero-title span{color:var(--orange);}
+
+.hero-sub{
+  font-family:var(--inter);
+  font-size:0.9rem;font-weight:400;
+  color:var(--muted);
+  line-height:1.7;
+  max-width:420px;
+  margin-bottom:36px;
+}
+
+.stat-row{
+  display:flex;gap:32px;
+  margin-bottom:40px;
+}
+.stat-item{}
+.stat-num{
+  font-family:var(--syne);
+  font-size:1.8rem;font-weight:800;
+  color:var(--white);
+  line-height:1;
+}
+.stat-num span{color:var(--orange);}
+.stat-label{
+  font-size:0.72rem;font-weight:500;
+  color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;
+  margin-top:4px;
+}
+
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--orange);color:#fff;
+  font-family:var(--inter);font-size:0.85rem;font-weight:600;
+  padding:13px 24px;border:none;border-radius:2px;
+  cursor:pointer;letter-spacing:0.02em;
+  transition:background 0.2s,box-shadow 0.2s;
+  box-shadow:0 4px 20px var(--orange-glow);
+}
+.btn-primary:hover{background:#EA6800;box-shadow:0 6px 28px rgba(249,115,22,0.55);}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:9px;
+  background:transparent;color:var(--white);
+  font-family:var(--inter);font-size:0.85rem;font-weight:500;
+  padding:13px 24px;
+  border:1px solid var(--charcoal-mid);border-radius:2px;
+  cursor:pointer;letter-spacing:0.02em;
+  transition:border-color 0.2s,color 0.2s;
+}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange);}
+
+/* hero grid line decoration */
+.hero-grid-lines{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(249,115,22,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(249,115,22,0.04) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+}
+
+/* Experience badge floating */
+.exp-badge{
+  position:absolute;
+  bottom:48px;right:32px;
+  background:var(--charcoal);
+  border:1px solid var(--charcoal-mid);
+  border-left:3px solid var(--orange);
+  padding:14px 18px;
+  min-width:160px;
+}
+.exp-badge .big{
+  font-family:var(--syne);font-size:1.6rem;font-weight:800;color:var(--orange);
+}
+.exp-badge .small{
+  font-size:0.72rem;color:var(--muted);font-weight:500;margin-top:2px;
+  text-transform:uppercase;letter-spacing:0.07em;
+}
+
+/* scroll arrow */
+.scroll-arrow{
+  position:absolute;
+  bottom:36px;left:80px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:var(--muted);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;
+  font-family:var(--inter);
+}
+.scroll-arrow i{
+  font-size:1.1rem;color:var(--orange);
+  animation:bounce 1.8s ease-in-out infinite;
+}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}]
+
+/* ══════════════════════════
+   HORIZONTAL SCROLL SECTION
+══════════════════════════ */
+#horiz-wrapper{
+  overflow:hidden;
+  position:relative;
+}
+#horiz-track{
+  display:flex;
+  width:300vw;
+  will-change:transform;
+}
+.h-panel{
+  width:100vw;
+  min-height:100vh;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:80px 60px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* panel backgrounds */
+.h-panel:nth-child(1){background:var(--charcoal);}
+.h-panel:nth-child(2){background:var(--charcoal-light);}
+.h-panel:nth-child(3){background:var(--charcoal);}
+
+.panel-grid-lines{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(249,115,22,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(249,115,22,0.03) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+}
+.panel-num{
+  position:absolute;
+  top:48px;right:60px;
+  font-family:var(--syne);
+  font-size:6rem;font-weight:800;
+  color:rgba(249,115,22,0.07);
+  line-height:1;
+  user-select:none;
+}
+
+.service-card{
+  max-width:620px;
+  width:100%;
+}
+.service-card .card-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--orange-dim);border:1px solid var(--orange-glow);
+  border-radius:2px;padding:5px 12px;
+  font-size:0.68rem;font-weight:600;color:var(--orange);
+  letter-spacing:0.1em;text-transform:uppercase;
+  margin-bottom:20px;
+}
+.service-card h2{
+  font-family:var(--syne);
+  font-size:clamp(1.8rem,3.5vw,2.8rem);
+  font-weight:800;line-height:1.12;
+  letter-spacing:-0.02em;
+  margin-bottom:16px;
+  color:var(--white);
+}
+.service-card h2 em{
+  font-style:normal;color:var(--orange);
+}
+.service-card .desc{
+  font-size:0.9rem;font-weight:400;
+  color:var(--muted);line-height:1.75;
+  margin-bottom:32px;
+  max-width:500px;
+}
+.feature-list{
+  display:flex;flex-direction:column;gap:12px;
+  margin-bottom:36px;
+}
+.feature-item{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:0.86rem;color:var(--white);font-weight:400;
+}
+.feature-item i{
+  color:var(--orange);font-size:0.9rem;margin-top:2px;flex-shrink:0;
+}
+.feature-item strong{font-weight:600;}
+
+/* Progress bar style */
+.prog-bar{
+  width:100%;height:3px;
+  background:var(--charcoal-mid);
+  border-radius:1px;
+  margin-top:8px;
+  overflow:hidden;
+}
+.prog-fill{
+  height:100%;background:var(--orange);
+  border-radius:1px;
+  transform-origin:left;
+}
+
+/* pricing card */
+.price-box{
+  background:var(--orange-dim);
+  border:1px solid var(--orange-glow);
+  border-left:3px solid var(--orange);
+  padding:20px 24px;
+  margin-bottom:28px;
+  display:flex;align-items:center;gap:20px;
+}
+.price-box .price-val{
+  font-family:var(--syne);font-size:2rem;font-weight:800;color:var(--orange);
+}
+.price-box .price-sub{
+  font-size:0.78rem;color:var(--muted);line-height:1.5;
+}
+
+/* contact panel */
+.contact-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:14px;margin-bottom:32px;
+}
+.contact-tile{
+  background:var(--charcoal-light);
+  border:1px solid var(--charcoal-mid);
+  padding:18px 16px;
+  display:flex;align-items:flex-start;gap:12px;
+}
+.contact-tile i{
+  color:var(--orange);font-size:1rem;margin-top:2px;flex-shrink:0;
+}
+.contact-tile .ct-label{
+  font-size:0.68rem;color:var(--muted);font-weight:600;
+  text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;
+}
+.contact-tile .ct-val{
+  font-size:0.85rem;color:var(--white);font-weight:500;
+}
+
+/* social row */
+.social-row{display:flex;gap:10px;}
+.social-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:40px;height:40px;
+  background:var(--charcoal-light);
+  border:1px solid var(--charcoal-mid);
+  color:var(--muted);font-size:0.9rem;
+  cursor:pointer;transition:border-color 0.2s,color 0.2s;
+  border-radius:2px;
+}
+.social-btn:hover{border-color:var(--orange);color:var(--orange);}
+
+/* progress indicator */
+#progress-bar{
+  position:fixed;top:0;left:0;
+  height:3px;background:var(--orange);
+  width:0%;z-index:1000;
+  box-shadow:0 0 8px var(--orange-glow);
+  transition:width 0.1s linear;
+}
+
+/* panel nav dots */
+#panel-dots{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;gap:10px;z-index:100;
+}
+.pdot{
+  width:8px;height:8px;border-radius:1px;
+  background:var(--charcoal-mid);
+  transition:background 0.3s,width 0.3s;
+  cursor:pointer;
+}
+.pdot.active{background:var(--orange);width:24px;}
+
+/* section label */
+.section-label{
+  position:fixed;bottom:72px;left:50%;transform:translateX(-50%);
+  font-family:var(--inter);font-size:0.68rem;font-weight:600;
+  color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;
+  z-index:100;
+  pointer-events:none;
+}
+
+/* ══════════════════════════
+   CONTACT FOOTER SECTION
+══════════════════════════ */
+#footer-cta{
+  min-height:50vh;
+  background:var(--charcoal-light);
+  display:flex;align-items:center;justify-content:center;
+  padding:80px 60px;
+  text-align:center;
+  position:relative;z-index:1;
+  overflow:hidden;
+}
+#footer-cta::before{
+  content:'';
+  position:absolute;
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(249,115,22,0.08) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.footer-inner{max-width:560px;position:relative;}
+.footer-inner h2{
+  font-family:var(--syne);
+  font-size:clamp(1.8rem,3vw,2.6rem);
+  font-weight:800;line-height:1.15;
+  margin-bottom:16px;
+}
+.footer-inner h2 span{color:var(--orange);}
+.footer-inner p{
+  font-size:0.9rem;color:var(--muted);line-height:1.7;margin-bottom:32px;
+}
+.footer-btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+@media(max-width:768px){
+  #hero{grid-template-columns:1fr;}
+  .hero-right{display:none;}
+  .hero-left{padding:60px 24px;}
+  .h-panel{padding:48px 24px;}
+  .contact-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<div id="panel-dots">
+  <div class="pdot active" data-idx="0"></div>
+  <div class="pdot" data-idx="1"></div>
+  <div class="pdot" data-idx="2"></div>
+</div>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-tag">
+      <span class="dot"></span>
+      Prémium Biztosítás
+    </div>
+    <h1 class="hero-title">
+      A jövőd<br/>
+      <span>védelme</span><br/>
+      a prioritás.
+    </h1>
+    <p class="hero-sub">
+      Személyre szabott biztosítási megoldások 15 év tapasztalattal. Magánszemélyeknek és cégeknek egyaránt — transparent, gyors, megbízható.
+    </p>
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-num">12<span>K+</span></div>
+        <div class="stat-label">Ügyfél</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">98<span>%</span></div>
+        <div class="stat-label">Elégedettség</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">15<span>év</span></div>
+        <div class="stat-label">Tapasztalat</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="void(0)">
+        <i class="fa-solid fa-calendar-check"></i>
+        Időpont foglalás
+      </button>
+      <button class="btn-ghost" onclick="void(0)">
+        <i class="fa-solid fa-file-shield"></i>
+        Ajánlatkérés
+      </button>
+    </div>
+    <div class="scroll-arrow" style="position:absolute;bottom:36px;left:80px;">
+      <i class="fa-solid fa-chevron-down"></i>
+      <span>Görgessen</span>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-grid-lines"></div>
+    <div class="avatar-frame" id="avatar-container">
+      <img id="main-avatar" src="https://placehold.co/400x400/18181B/F97316?text=Advisor" alt="Advisor"/>
+      <div class="avatar-corner corner-tl"></div>
+      <div class="avatar-corner corner-tr"></div>
+      <div class="avatar-corner corner-bl"></div>
+      <div class="avatar-corner corner-br"></div>
+    </div>
+    <div class="exp-badge">
+      <div class="big">15+</div>
+      <div class="small">Év a piacon</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HORIZONTAL SCROLL WRAPPER ══ -->
+<div id="horiz-wrapper">
+  <div id="horiz-track">
+
+    <!-- PANEL 1: Life Insurance -->
+    <div class="h-panel">
+      <div class="panel-grid-lines"></div>
+      <div class="panel-num">01</div>
+      <div class="service-card" id="sc-1">
+        <div class="card-tag"><i class="fa-solid fa-heart-pulse"></i>&nbsp; Életbiztosítás</div>
+        <h2>Védje <em>szeretteit</em><br/>minden körülmény között.</h2>
+        <p class="desc">
+          Átfogó életbiztosítási csomagok, amelyek valódi biztonságot nyújtanak. Haláleseti térítéstől a rokkantsági fedezetig — egyetlen szerződésben.
+        </p>
+        <div class="feature-list">
+          <div class="feature-item">
+            <i class="fa-solid fa-shield-halved"></i>
+            <div><strong>Haláleseti tőke</strong> — Akár 100 millió forint értékig</div>
+          </div>
+          <div class="feature-item">
+            <i class="fa-solid fa-hand-holding-medical"></i>
+            <div><strong>Rokkantsági fedezet</strong> — Teljes és részleges munkaképtelenségre</div>
+          </div>
+          <div class="feature-item">
+            <i class="fa-solid fa-circle-dollar-to-slot"></i>
+            <div><strong>Megtakarítási komponens</strong> — Adóoptimalizált befektetéssel kombinálva</div>
+          </div>
+          <div class="feature-item">
+            <i class="fa-solid fa-stethoscope"></i>
+            <div><strong>Kritikus betegség rider</strong> — 36 diagnózisra kiterjedő fedezet</div>
+          </div>
+        </div>
+        <div class="price-box">
+          <div>
+            <div class="price-val">3 990 Ft</div>
+          </div>
+          <div class="price-sub">
+            Alap havi díjtól<br/>
+            <span style="color:var(--orange);font-weight:600;">→ Ingyenes konzultáció</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="void(0)">
+            <i class="fa-solid fa-circle-check"></i>
+            Ajánlatot kérek
+          </button>
+          <button class="btn-ghost" onclick="void(0)">
+            <i class="fa-solid fa-book-open"></i>
+            Részletek
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 2: Vehicle Insurance -->
+    <div class="h-panel">
+      <div class="panel-grid-lines"></div>
+      <div class="panel-num">02</div>
+      <div class="service-card" id="sc-2">
+        <div class="card-tag"><i class="fa-solid fa-car"></i>&nbsp; Gépjármű</div>
+        <h2>CASCO & KGFB —<br/><em>kompromisszum</em> nélkül.</h2>
+        <p class="desc">
+          A legjobb gépjárműbiztosítási csomagok összehasonlítása és megkötése egyetlen helyen. Minden márkára, minden évjáratra.
+        </p>
+        <div style="margin-bottom:28px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-size:0.82rem;color:var(--white);font-weight:500;">Személyautó KGFB</span>
+            <span style="font-size:0.82rem;color:var(--orange);font-weight:600;">97%</span>
+          </div>
+          <div class="prog-bar"><div class="prog-fill" id="p1" style="width:0%"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:16px;margin-bottom:8px;">
+            <span style="font-size:0.82rem;color:var(--white);font-weight:500;">CASCO teljes körű</span>
+            <span style="font-size:0.82rem;color:var(--orange);font-weight:600;">92%</span>
+          </div>
+          <div class="prog-bar"><div class="prog-fill" id="p2" style="width:0%"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:16px;margin-bottom:8px;">
+            <span style="font-size:0.82rem;color:var(--white);font-weight:500;">Flottakezelés cégeknek</span>
+            <span style="font-size:0.82rem;color:var(--orange);font-weight:600;">88%</span>
+          </div>
+          <div class="prog-bar"><div class="prog-fill" id="p3" style="width:0%"></div></div>
+        </div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <i class="fa-solid fa-car-burst"></i>
+            <div><strong>Teljes kár és lopás</strong> — Azonnali kárrendezés</div>
+          </div>
+          <div class="feature-item">
+            <i class="fa-solid fa-truck-ramp-box"></i>
+            <div><strong>Assistance szolgáltatás</strong> — 0–24 segítség az úton</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="void(0)">
+            <i class="fa-solid fa-magnifying-glass-dollar"></i>
+            Összehasonlítás
+          </button>
+          <button class="btn-ghost" onclick="void(0)">
+            <i class="fa-solid fa-calculator"></i>
+            Díjkalkulátor
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 3: Contact -->
+    <div class="h-panel">
+      <div class="panel-grid-lines"></div>
+      <div class="panel-num">03</div>
+      <div class="service-card" id="sc-3">
+        <div class="card-tag"><i class="fa-solid fa-handshake"></i>&nbsp; Kapcsolat</div>
+        <h2>Dolgozzunk<br/><em>együtt</em> — ma.</h2>
+        <p class="desc">
+          Kovács Bence — vezető biztosítási tanácsadó. Vegye fel velem a kapcsolatot, és kapjon személyre szabott megoldást 24 órán belül.
+        </p>
+        <div class="contact-grid">
+          <div class="contact-tile">
+            <i class="fa-solid fa-phone"></i>
+            <div>
+              <div class="ct-label">Telefon</div>
+              <div class="ct-val">+36 30 123 4567</div>
+            </div>
+          </div>
+          <div class="contact-tile">
+            <i class="fa-solid fa-envelope"></i>
+            <div>
+              <div class="ct-label">E-mail</div>
+              <div class="ct-val">kovacs@advisor.hu</div>
+            </div>
+          </div>
+          <div class="contact-tile">
+            <i class="fa-solid fa-location-dot"></i>
+            <div>
+              <div class="ct-label">Iroda</div>
+              <div class="ct-val">Budapest, V. ker.</div>
+            </div>
+          </div>
+          <div class="contact-tile">
+            <i class="fa-solid fa-clock"></i>
+            <div>
+              <div class="ct-label">Nyitva</div>
+              <div class="ct-val">H–P: 9:00–18:00</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;">
+          <div class="btn-row">
+            <button class="btn-primary" onclick="void(0)">
+              <i class="fa-brands fa-whatsapp"></i>
+              WhatsApp
+            </button>
+            <button class="btn-ghost" onclick="void(0)">
+              <i class="fa-solid fa-address-book"></i>
+              VCF mentés
+            </button>
+          </div>
+          <div class="social-row">
+            <div class="social-btn"><i class="fa-brands fa-linkedin-in"></i></div>
+            <div class="social-btn"><i class="fa-brands fa-facebook-f"></i></div>
+            <div class="social-btn"><i class="fa-brands fa-instagram"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ FOOTER CTA ══ -->
+<section id="footer-cta">
+  <div class="footer-inner">
+    <h2>Készen áll egy <span>ingyenes konzultációra?</span></h2>
+    <p>Foglaljon időpontot most — 30 percben átbeszéljük az Önnek legmegfelelőbb biztosítási stratégiát.</p>
+    <div class="footer-btn-row">
+      <button class="btn-primary" onclick="void(0)">
+        <i class="fa-solid fa-calendar-days"></i>
+        Időpontot foglalok
+      </button>
+      <button class="btn-ghost" onclick="void(0)">
+        <i class="fa-solid fa-paper-plane"></i>
+        Üzenetet küldök
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- AVATAR SWITCHER MODULE -->
+<div id="avatar-switcher" style="position: fixed; right: -320px; top: 15%; width: 320px; background: rgba(15, 20, 35, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px 0 0 12px; padding: 16px; z-index: 9999; transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: -5px 0 25px rgba(0,0,0,0.5);">
+  <button id="switcher-toggle" style="position: absolute; left: -46px; top: 20px; width: 46px; height: 46px; background: #3B82F6; color: white; border: none; border-radius: 8px 0 0 8px; cursor: pointer; font-size: 1.2rem; display: flex; justify-content: center; align-items: center; box-shadow: -3px 0 10px rgba(59, 130, 246, 0.4);">
+    <i class="fa-solid fa-image"></i>
+  </button>
+  <h4 style="color: white; font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; text-align: center;">Demó Profilképek</h4>
+  <div style="display: flex; gap: 6px; margin-bottom: 8px;" id="filter-gender">
+    <button data-val="all" class="fw-btn active" style="flex:1; padding:6px; background:#3B82F6; color:#fff; border:none; border-radius:6px; font-size:0.75rem; cursor:pointer;">Mind</button>
+    <button data-val="man" class="fw-btn" style="flex:1; padding:6px; background:rgba(255,255,255,0.1); color:#fff; border:none; border-radius:6px; font-size:0.75rem; cursor:pointer;"><i class="fa-solid fa-mars"></i> Férfi</button>
+    <button data-val="woman" class="fw-btn" style="flex:1; padding:6px; background:rgba(255,255,255,0.1); color:#fff; border:none; border-radius:6px; font-size:0.75rem; cursor:pointer;"><i class="fa-solid fa-venus"></i> Nő</button>
+  </div>
+  <div style="display: flex; gap: 6px; margin-bottom: 16px;" id="filter-style">
+    <button data-val="all" class="fw-btn active" style="flex:1; padding:6px; background:#3B82F6; color:#fff; border:none; border-radius:6px; font-size:0.7rem; cursor:pointer;">Mind</button>
+    <button data-val="normal" class="fw-btn" style="flex:1; padding:6px; background:rgba(255,255,255,0.1); color:#fff; border:none; border-radius:6px; font-size:0.7rem; cursor:pointer;">Normál</button>
+    <button data-val="art" class="fw-btn" style="flex:1; padding:6px; background:rgba(255,255,255,0.1); color:#fff; border:none; border-radius:6px; font-size:0.7rem; cursor:pointer;">Művészi</button>
+    <button data-val="extreme" class="fw-btn" style="flex:1; padding:6px; background:rgba(255,255,255,0.1); color:#fff; border:none; border-radius:6px; font-size:0.7rem; cursor:pointer;">Extrém</button>
+  </div>
+  <div id="avatar-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-height: 250px; overflow-y: auto; padding-right: 4px;"></div>
+</div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── PROGRESS BAR ──
+const progressBar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = Math.round((scrollTop / docHeight) * 100);
+  progressBar.style.width = pct + '%';
+});
+
+// ── HERO ENTRANCE ──
+const heroTl = gsap.timeline({defaults:{ease:'power3.out'}});
+heroTl
+  .from('.hero-tag', {opacity:0, y:20, duration:0.7, delay:0.2})
+  .from('h1.hero-title', {opacity:0, y:30, duration:0.8}, '-=0.3')
+  .from('.hero-sub', {opacity:0, y:20, duration:0.7}, '-=0.4')
+  .from('.stat-item', {opacity:0, y:20, stagger:0.12, duration:0.6}, '-=0.3')
+  .from('.btn-row', {opacity:0, y:16, duration:0.6}, '-=0.3')
+  .from('#avatar-container', {opacity:0, scale:0.92, duration:0.9, ease:'power2.out'}, 0.4)
+  .from('.exp-badge', {opacity:0, x:20, duration:0.6}, '-=0.3');
+
+// ── HORIZONTAL SCROLL ──
+const track = document.getElementById('horiz-track');
+const panels = document.querySelectorAll('.h-panel');
+const dots = document.querySelectorAll('.pdot');
+
+let currentPanel = 0;
+function setActiveDot(idx) {
+  dots.forEach((d,i) => d.classList.toggle('active', i === idx));
+  currentPanel = idx;
+}
+
+ScrollTrigger.create({
+  trigger: '#horiz-wrapper',
+  start: 'top top',
+  end: '+=200%',
+  pin: true,
+  scrub: 1,
+  anticipatePin: 1,
+  onUpdate: (self) => {
+    const prog = self.progress;
+    const xVal = -(prog * (panels.length - 1)) * 100;
+    gsap.set(track, {xPercent: xVal / panels.length});
+    const panelIdx = Math.round(prog * (panels.length - 1));
+    if (panelIdx !== currentPanel) setActiveDot(panelIdx);
+    // animate progress bars when panel 2 is in view
+    if (panelIdx === 1) {
+      gsap.to('#p1', {width:'97%', duration:1.2, ease:'power2.out', overwrite:true});
+      gsap.to('#p2', {width:'92%', duration:1.4, ease:'power2.out', delay:0.15, overwrite:true});
+      gsap.to('#p3', {width:'88%', duration:1.6, ease:'power2.out', delay:0.3, overwrite:true});
+    }
+  }
+});
+
+// panel card entrances via ScrollTrigger
+['#sc-1','#sc-2','#sc-3'].forEach((sel, i) => {
+  gsap.from(sel, {
+    opacity:0, x:60, duration:1, ease:'power3.out',
+    scrollTrigger:{
+      trigger:'#horiz-wrapper',
+      start:`top+=${i * 67}% top`,
+      end:`top+=${i * 67 + 20}% top`,
+      scrub:false,
+      toggleActions:'play none none reverse'
+    }
+  });
+});
+
+// dot navigation
+dots.forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    const trigger = ScrollTrigger.getById('horiz-main') || ScrollTrigger.getAll().find(t => t.trigger === document.getElementById('horiz-wrapper'));
+    if (trigger) {
+      const targetProgress = i / (panels.length - 1);
+      const scrollTarget = trigger.start + (trigger.end - trigger.start) * targetProgress;
+      window.scrollTo({top: scrollTarget, behavior:'smooth'});
+    }
+  });
+});
+
+// ── FOOTER ENTRANCE ──
+gsap.from('.footer-inner', {
+  opacity:0, y:40, duration:1, ease:'power3.out',
+  scrollTrigger:{trigger:'#footer-cta', start:'top 80%'}
+});
+
+// ── AVATAR SWITCHER ──
+const switcher = document.getElementById('avatar-switcher');
+const toggleBtn = document.getElementById('switcher-toggle');
+let isOpen = false;
+toggleBtn.addEventListener('click', () => {
+  isOpen = !isOpen;
+  switcher.style.right = isOpen ? '0px' : '-320px';
+});
+const avatarData = [
+  {id:'01',gender:'man',style:'normal'},{id:'02',gender:'man',style:'normal'},
+  {id:'03',gender:'man',style:'normal'},{id:'04',gender:'man',style:'art'},
+  {id:'05',gender:'man',style:'art'},{id:'06',gender:'man',style:'extreme'},
+  {id:'07',gender:'man',style:'extreme'},{id:'08',gender:'woman',style:'normal'},
+  {id:'09',gender:'woman',style:'normal'},{id:'10',gender:'woman',style:'normal'},
+  {id:'11',gender:'woman',style:'art'},{id:'12',gender:'woman',style:'art'},
+  {id:'13',gender:'woman',style:'extreme'},{id:'14',gender:'woman',style:'extreme'},
+  {id:'15',gender:'man',style:'art'},{id:'16',gender:'woman',style:'art'},
+  {id:'17',gender:'man',style:'extreme'},{id:'18',gender:'woman',style:'extreme'},
+  {id:'19',gender:'man',style:'normal'},{id:'20',gender:'woman',style:'normal'}
+];
+let activeGender='all', activeStyle='all';
+const grid = document.getElementById('avatar-grid');
+const mainAvatar = document.getElementById('main-avatar');
+function setupFilters(containerId, filterType) {
+  const container = document.getElementById(containerId);
+  const buttons = container.querySelectorAll('.fw-btn');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => {b.style.background='rgba(255,255,255,0.1)';b.classList.remove('active');});
+      btn.style.background='#3B82F6';btn.classList.add('active');
+      if(filterType==='gender') activeGender=btn.dataset.val;
+      if(filterType==='style') activeStyle=btn.dataset.val;
+      renderGrid();
+    });
+  });
+}
+setupFilters('filter-gender','gender');
+setupFilters('filter-style','style');
+function renderGrid() {
+  grid.innerHTML='';
+  const filtered = avatarData.filter(item =>
+    (activeGender==='all'||item.gender===activeGender) &&
+    (activeStyle==='all'||item.style===activeStyle)
+  );
+  filtered.forEach(item => {
+    const imgSrc = `../shared-assets/avatars/${item.id}.jpg`;
+    const thumb = document.createElement('img');
+    thumb.src = imgSrc;
+    thumb.onerror = function(){this.src=`https://placehold.co/400x400/1E293B/FFFFFF?text=${item.id}`;};
+    thumb.style.cssText='width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:border 0.2s;';
+    thumb.addEventListener('mouseover',()=>thumb.style.border='2px solid #3B82F6');
+    thumb.addEventListener('mouseout',()=>thumb.style.border='2px solid transparent');
+    thumb.addEventListener('click',()=>{
+      mainAvatar.style.opacity=0;
+      setTimeout(()=>{mainAvatar.src=thumb.src;mainAvatar.style.opacity=1;},150);
+    });
+    grid.appendChild(thumb);
+  });
+}
+renderGrid();
+</script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIZTOSÍTÁSI_ARCHITEKTÚRA // Digitális Névjegy</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+  :root{
+    --bg: #171717;
+    --cyan: #06B6D4;
+    --cyan-dim: rgba(6,182,212,0.35);
+    --cyan-faint: rgba(6,182,212,0.08);
+    --ink: #D4D4D8;
+    --ink-dim: #71717A;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Fira Code','Space Mono',monospace;
+  }
+
+  body{
+    background-image:
+      linear-gradient(var(--cyan-faint) 1px, transparent 1px),
+      linear-gradient(90deg, var(--cyan-faint) 1px, transparent 1px),
+      linear-gradient(rgba(6,182,212,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(6,182,212,0.04) 1px, transparent 1px);
+    background-size: 88px 88px, 88px 88px, 22px 22px, 22px 22px;
+    background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+  }
+
+  .font-display{ font-family:'Space Mono', monospace; }
+
+  /* Blueprint module border */
+  .bp-module{
+    border:1px solid var(--cyan);
+    position:relative;
+    background:rgba(23,23,23,0.6);
+    transition: background-color .25s ease, box-shadow .25s ease;
+  }
+  .bp-module:hover{
+    background-color: rgba(6,182,212,0.10);
+    box-shadow: 0 0 24px -6px rgba(6,182,212,0.55), inset 0 0 24px -10px rgba(6,182,212,0.4);
+  }
+
+  /* corner ticks like blueprint annotation marks */
+  .bp-corner::before, .bp-corner::after,
+  .bp-corner-tl::before, .bp-corner-br::after{ content:''; }
+
+  .corner-tick{
+    position:absolute; width:10px; height:10px;
+    border-color:var(--cyan);
+    pointer-events:none;
+  }
+  .ct-tl{ top:-1px; left:-1px; border-top:2px solid var(--cyan); border-left:2px solid var(--cyan); }
+  .ct-tr{ top:-1px; right:-1px; border-top:2px solid var(--cyan); border-right:2px solid var(--cyan); }
+  .ct-bl{ bottom:-1px; left:-1px; border-bottom:2px solid var(--cyan); border-left:2px solid var(--cyan); }
+  .ct-br{ bottom:-1px; right:-1px; border-bottom:2px solid var(--cyan); border-right:2px solid var(--cyan); }
+
+  /* Avatar crosshair frame */
+  .avatar-frame{
+    position:relative;
+    border:1px solid var(--cyan);
+    box-shadow: 0 0 30px -4px rgba(6,182,212,0.45);
+  }
+  .crosshair-h, .crosshair-v{
+    position:absolute;
+    background: var(--cyan);
+    opacity:0.7;
+  }
+  .crosshair-h{ height:1px; width:18px; }
+  .crosshair-v{ width:1px; height:18px; }
+  .xh-tl-h{ top:14px; left:14px; }
+  .xh-tl-v{ top:14px; left:14px; }
+  .xh-tr-h{ top:14px; right:14px; }
+  .xh-tr-v{ top:14px; right:14px; }
+  .xh-bl-h{ bottom:14px; left:14px; }
+  .xh-bl-v{ bottom:14px; left:14px; }
+  .xh-br-h{ bottom:14px; right:14px; }
+  .xh-br-v{ bottom:14px; right:14px; }
+
+  /* Scan line glow on avatar */
+  @keyframes scan{
+    0%{ top:0%; opacity:0; }
+    10%{ opacity:1; }
+    90%{ opacity:1; }
+    100%{ top:100%; opacity:0; }
+  }
+  .scanline{
+    position:absolute; left:0; width:100%; height:2px;
+    background:linear-gradient(90deg, transparent, var(--cyan), transparent);
+    box-shadow:0 0 12px 2px rgba(6,182,212,0.8);
+    animation:scan 3.2s linear infinite;
+  }
+
+  /* Typing effect */
+  .typewriter{
+    display:inline-block;
+    overflow:hidden;
+    white-space:nowrap;
+    border-right: 2px solid var(--cyan);
+    width: 0;
+    animation:
+      typing 2.6s steps(34, end) forwards,
+      blink-caret .85s step-end infinite;
+  }
+  @keyframes typing{ from{ width:0 } to{ width:34ch } }
+  @keyframes blink-caret{ 50%{ border-color: transparent } }
+
+  /* Status pulse dot */
+  .pulse-dot{
+    width:8px; height:8px; border-radius:9999px;
+    background:var(--cyan);
+    box-shadow:0 0 0 0 rgba(6,182,212,0.7);
+    animation: pulse 1.8s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(6,182,212,0.55); }
+    70%{ box-shadow:0 0 0 9px rgba(6,182,212,0); }
+    100%{ box-shadow:0 0 0 0 rgba(6,182,212,0); }
+  }
+
+  .text-cyan-glow{ color:var(--cyan); text-shadow:0 0 10px rgba(6,182,212,0.55); }
+
+  /* CTA button: technical prompt, high visibility, filled solid for max contrast */
+  .cta-btn{
+    font-family:'Fira Code', monospace;
+    background: var(--cyan);
+    color:#0a1014;
+    border:1px solid var(--cyan);
+    letter-spacing:0.06em;
+    box-shadow: 0 0 0 0 rgba(6,182,212,0.0), 0 0 28px -2px rgba(6,182,212,0.75);
+    transition: transform .15s ease, box-shadow .25s ease, background-color .25s ease;
+  }
+  .cta-btn:hover{
+    background:#22D3EE;
+    box-shadow: 0 0 40px 0px rgba(34,211,238,0.95);
+    transform: translateY(-2px);
+  }
+  .cta-btn:active{ transform: translateY(0px) scale(0.99); }
+
+  .cta-btn .cursor-blink{
+    animation: blink-caret .85s step-end infinite;
+  }
+
+  .label-tag{
+    font-size:10px;
+    letter-spacing:0.18em;
+    color: var(--ink-dim);
+  }
+
+  .divider-line{
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--cyan-dim), var(--cyan), var(--cyan-dim), transparent);
+  }
+
+  ::selection{ background: rgba(6,182,212,0.35); color:#fff; }
+
+  /* focus visibility for accessibility */
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid #22D3EE;
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .typewriter{ animation:none; width:34ch; border-right:none; }
+    .scanline{ animation:none; display:none; }
+    .pulse-dot{ animation:none; }
+    .cta-btn:hover{ transform:none; }
+  }
+</style>
+</head>
+
+<body class="min-h-screen w-full antialiased">
+
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+
+    <!-- TOP META BAR -->
+    <div class="flex items-center justify-between mb-6 text-[11px] sm:text-xs tracking-widest uppercase">
+      <div class="flex items-center gap-2 text-zinc-500">
+        <span class="pulse-dot"></span>
+        <span>RENDSZER_ÁLLAPOT: <span class="text-cyan-glow">ONLINE</span></span>
+      </div>
+      <div class="text-zinc-600 hidden sm:block">DOC_ID: CRE-INS-0042 / REV.3</div>
+    </div>
+
+    <!-- HERO MODULE -->
+    <section class="bp-module px-5 sm:px-8 py-7 sm:py-10 mb-6">
+      <div class="corner-tick ct-tl"></div>
+      <div class="corner-tick ct-tr"></div>
+      <div class="corner-tick ct-bl"></div>
+      <div class="corner-tick ct-br"></div>
+
+      <p class="label-tag uppercase mb-3">[ SYS.BOOT — KERESKEDELMI_INGATLAN_BIZTOSÍTÁS ]</p>
+
+      <h1 class="font-display text-cyan-glow text-base sm:text-xl md:text-2xl mb-1 leading-snug">
+        <span class="typewriter">&gt; BIZTOSÍTÁSI_ARCHITEKTÚRA_AKTIVÁLVA</span>
+      </h1>
+
+      <div class="divider-line my-5"></div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-6 sm:gap-8 items-start">
+
+        <!-- AVATAR -->
+        <div class="avatar-frame w-32 h-32 sm:w-40 sm:h-40 mx-auto sm:mx-0 overflow-hidden">
+          <img src="https://placehold.co/400x400/171717/06B6D4?text=Agent"
+               alt="Ügynök profilkép"
+               class="w-full h-full object-cover opacity-90" />
+          <div class="crosshair-h xh-tl-h"></div><div class="crosshair-v xh-tl-v"></div>
+          <div class="crosshair-h xh-tr-h"></div><div class="crosshair-v xh-tr-v"></div>
+          <div class="crosshair-h xh-bl-h"></div><div class="crosshair-v xh-bl-v"></div>
+          <div class="crosshair-h xh-br-h"></div><div class="crosshair-v xh-br-v"></div>
+          <div class="scanline"></div>
+        </div>
+
+        <!-- IDENTITY DATA -->
+        <div>
+          <p class="label-tag mb-1">NÉV_AZONOSÍTÓ</p>
+          <h2 class="font-display text-lg sm:text-2xl text-zinc-100 mb-4 tracking-tight">KOVÁCS&nbsp;LÁSZLÓ</h2>
+
+          <p class="label-tag mb-1">FUNKCIÓ</p>
+          <p class="text-cyan-glow text-sm sm:text-base mb-4 uppercase">Senior Kockázatkezelési&nbsp;Tanácsadó — CRE&nbsp;Biztosítás</p>
+
+          <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-[11px] sm:text-xs uppercase">
+            <div>
+              <span class="text-zinc-500">LIC.SZÁM</span>
+              <div class="text-zinc-200">HU-CRE-88341</div>
+            </div>
+            <div>
+              <span class="text-zinc-500">AKTÍV ÉV</span>
+              <div class="text-zinc-200">14&nbsp;ÉV / 2012–</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE GRID: SPECS -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-px mb-6 border border-cyan-500" style="border-color:var(--cyan);">
+      <div class="bp-module border-0 sm:border-r px-5 py-5" style="border-color:var(--cyan);">
+        <p class="label-tag mb-2">01 // FEDEZETI TERÜLET</p>
+        <p class="text-sm text-zinc-200 leading-relaxed">IRODAHÁZAK · IPARI&nbsp;CSARNOKOK<br>BEVÁSÁRLÓKÖZPONTOK · RAKTÁRBÁZISOK</p>
+      </div>
+      <div class="bp-module border-0 sm:border-r px-5 py-5" style="border-color:var(--cyan);">
+        <p class="label-tag mb-2">02 // PORTFÓLIÓ VOLUMEN</p>
+        <p class="text-sm text-zinc-200 leading-relaxed">240+ KEZELT INGATLAN<br>4.2 MRD HUF FEDEZETI ÉRTÉK</p>
+      </div>
+      <div class="bp-module border-0 px-5 py-5">
+        <p class="label-tag mb-2">03 // VÁLASZIDŐ</p>
+        <p class="text-sm text-zinc-200 leading-relaxed">KÁRBEJELENTÉS&nbsp;FELDOLGOZÁS<br>&lt;&nbsp;24&nbsp;ÓRA / SLA&nbsp;GARANTÁLT</p>
+      </div>
+    </section>
+
+    <!-- MODULE GRID: SERVICES -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+      <div class="bp-module relative px-5 py-5">
+        <div class="corner-tick ct-tl" style="width:7px;height:7px;"></div>
+        <div class="corner-tick ct-br" style="width:7px;height:7px;"></div>
+        <p class="label-tag mb-3">SZOLGÁLTATÁSI MODUL_A</p>
+        <ul class="text-sm text-zinc-200 space-y-2">
+          <li class="flex gap-2"><i class="fa-solid fa-angle-right text-cyan-500 mt-1"></i><span>VAGYONBIZTOSÍTÁS — ÉPÜLETSZERKEZET</span></li>
+          <li class="flex gap-2"><i class="fa-solid fa-angle-right text-cyan-500 mt-1"></i><span>FELELŐSSÉGBIZTOSÍTÁS — BÉRBEADÓI&nbsp;KOCKÁZAT</span></li>
+          <li class="flex gap-2"><i class="fa-solid fa-angle-right text-cyan-500 mt-1"></i><span>ÜZEMSZÜNET / BÉRLETI&nbsp;BEVÉTELKIESÉS</span></li>
+        </ul>
+      </div>
+      <div class="bp-module relative px-5 py-5">
+        <div class="corner-tick ct-tl" style="width:7px;height:7px;"></div>
+        <div class="corner-tick ct-br" style="width:7px;height:7px;"></div>
+        <p class="label-tag mb-3">SZOLGÁLTATÁSI MODUL_B</p>
+        <ul class="text-sm text-zinc-200 space-y-2">
+          <li class="flex gap-2"><i class="fa-solid fa-angle-right text-cyan-500 mt-1"></i><span>ÉPÍTÉS ALATTI KOCKÁZATOK (CAR)</span></li>
+          <li class="flex gap-2"><i class="fa-solid fa-angle-right text-cyan-500 mt-1"></i><span>KOCKÁZATFELMÉRÉS ÉS AUDIT</span></li>
+          <li class="flex gap-2"><i class="fa-solid fa-angle-right text-cyan-500 mt-1"></i><span>PORTFÓLIÓ-SZINTŰ KÖTVÉNYSTRUKTÚRA</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CONTACT DATA TABLE -->
+    <section class="bp-module px-5 sm:px-8 py-6 mb-8">
+      <p class="label-tag mb-4">// KAPCSOLATI_PROTOKOLLOK</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+        <a href="tel:+36301234567" class="flex items-center gap-3 text-zinc-200 hover:text-cyan-glow transition-colors group">
+          <span class="w-8 h-8 flex items-center justify-center border" style="border-color:var(--cyan);">
+            <i class="fa-solid fa-phone text-cyan-500 text-xs"></i>
+          </span>
+          <span class="leading-tight">
+            <span class="block text-zinc-500 text-[10px] uppercase tracking-widest">TELEFON</span>
+            +36&nbsp;30&nbsp;123&nbsp;4567
+          </span>
+        </a>
+        <a href="mailto:kovacs.laszlo@cre-biztositas.hu" class="flex items-center gap-3 text-zinc-200 hover:text-cyan-glow transition-colors group">
+          <span class="w-8 h-8 flex items-center justify-center border" style="border-color:var(--cyan);">
+            <i class="fa-solid fa-envelope text-cyan-500 text-xs"></i>
+          </span>
+          <span class="leading-tight">
+            <span class="block text-zinc-500 text-[10px] uppercase tracking-widest">EMAIL</span>
+            KOVACS.LASZLO@CRE.HU
+          </span>
+        </a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener" class="flex items-center gap-3 text-zinc-200 hover:text-cyan-glow transition-colors group">
+          <span class="w-8 h-8 flex items-center justify-center border" style="border-color:var(--cyan);">
+            <i class="fa-brands fa-linkedin-in text-cyan-500 text-xs"></i>
+          </span>
+          <span class="leading-tight">
+            <span class="block text-zinc-500 text-[10px] uppercase tracking-widest">LINKEDIN</span>
+            /KOVACSLASZLO-CRE
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="text-center mb-4">
+      <a href="mailto:kovacs.laszlo@cre-biztositas.hu?subject=Ajanlatkeres%20-%20CRE%20Biztositas"
+         class="cta-btn inline-flex items-center justify-center gap-3 px-8 sm:px-12 py-4 sm:py-5 text-sm sm:text-base font-bold uppercase w-full sm:w-auto">
+        <i class="fa-solid fa-terminal"></i>
+        <span>[ RENDSZER_INDÍTÁSA ]</span>
+        <span class="cursor-blink">_</span>
+      </a>
+      <p class="label-tag mt-4">KATTINTÁS&nbsp;ELINDÍTJA&nbsp;A&nbsp;KOCKÁZATFELMÉRÉSI&nbsp;FOLYAMATOT</p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-zinc-600 uppercase tracking-widest pt-6">
+      <span>© 2026 KOVÁCS LÁSZLÓ — CRE BIZTOSÍTÁSI TANÁCSADÓ</span>
+      <span class="flex items-center gap-2"><span class="pulse-dot" style="width:5px;height:5px;"></span>BLUEPRINT_V3.1 — TITKOSÍTOTT_KAPCSOLAT</span>
+    </footer>
+
+  </div>
+
+</body>
+</html>
