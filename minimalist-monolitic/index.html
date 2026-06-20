@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R. Varga — Kockázat. Kezelve.</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          onyx: '#111827',
+          ash: '#6B7280',
+          amber: '#F59E0B',
+        },
+        fontFamily: {
+          display: ['Syncopate', 'sans-serif'],
+          sans: ['Inter', 'sans-serif'],
+        },
+        borderRadius: {
+          none: '0',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  * { border-radius: 0 !important; }
+
+  body {
+    background-color: #000000;
+    color: #FFFFFF;
+  }
+
+  .hexagon {
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  }
+  .hexagon-frame {
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  }
+
+  .glow-amber {
+    filter: drop-shadow(0 0 22px rgba(245, 158, 11, 0.45));
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeIn 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in { animation: none; opacity: 1; transform: none; }
+  }
+
+  .matrix-box {
+    border: 2px solid transparent;
+    transition: border-color 250ms ease, background-color 250ms ease;
+  }
+  .matrix-box:hover {
+    border-color: #F59E0B;
+    background-color: #161F2E;
+  }
+
+  .cta-hard {
+    box-shadow: 6px 6px 0px #FFFFFF;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+  .cta-hard:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0px #FFFFFF;
+  }
+  .cta-hard:active {
+    transform: translate(3px, 3px);
+    box-shadow: 2px 2px 0px #FFFFFF;
+  }
+
+  .blink-dot {
+    animation: blink 1.6s step-start infinite;
+  }
+  @keyframes blink {
+    50% { opacity: 0.2; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .blink-dot { animation: none; }
+  }
+
+  ::selection {
+    background: #F59E0B;
+    color: #000000;
+  }
+</style>
+</head>
+
+<body class="font-sans antialiased text-white">
+
+<div class="max-w-4xl mx-auto px-6 sm:px-10">
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="flex items-center justify-between pt-8 pb-8 fade-in" style="animation-delay: 40ms;">
+    <p class="font-display text-xs sm:text-sm uppercase tracking-[0.25em] text-white">R. VARGA</p>
+    <div class="flex items-center gap-2">
+      <span class="w-1.5 h-1.5 bg-amber inline-block blink-dot"></span>
+      <p class="font-sans text-[10px] sm:text-xs uppercase tracking-[0.2em] text-ash">Magas Kockázatú Szektor</p>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="grid grid-cols-1 sm:grid-cols-12 sm:gap-10 items-center py-10 sm:py-16">
+
+    <!-- Left: hexagon avatar -->
+    <div class="sm:col-span-5 flex justify-center sm:justify-start fade-in" style="animation-delay: 140ms;">
+      <div class="hexagon-frame bg-amber p-[3px] w-[230px] h-[265px] sm:w-[260px] sm:h-[300px]">
+        <img
+          src="https://placehold.co/400x400/F59E0B/000000?text=Specialist"
+          alt="R. Varga portré"
+          width="400"
+          height="400"
+          class="hexagon w-full h-full object-cover glow-amber"
+        >
+      </div>
+    </div>
+
+    <!-- Right: massive headline -->
+    <div class="sm:col-span-7 mt-10 sm:mt-0 text-center sm:text-left fade-in" style="animation-delay: 240ms;">
+      <p class="font-sans text-[10px] sm:text-xs uppercase tracking-[0.25em] text-amber mb-5">
+        High-Risk Biztosítási Szakértő
+      </p>
+      <h1 class="font-display uppercase leading-[0.95] text-white text-[2.5rem] sm:text-6xl md:text-7xl tracking-tight">
+        Kockázat.<br>Kezelve.
+      </h1>
+      <p class="font-sans text-ash text-sm sm:text-base mt-7 max-w-sm mx-auto sm:mx-0 leading-relaxed">
+        Fedezet ott, ahol a hagyományos biztosítók visszalépnek.
+        Ipari, építőipari és extrém kockázatú tevékenységekhez.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ GRID MATRIX ============ -->
+  <section class="py-10 sm:py-14 fade-in" style="animation-delay: 340ms;">
+    <p class="font-sans text-[10px] sm:text-xs uppercase tracking-[0.25em] text-ash mb-6">
+      // Szakterületek
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-[2px] bg-black">
+
+      <div class="matrix-box bg-onyx p-7 sm:p-8">
+        <i class="fa-light fa-helmet-safety text-amber text-2xl"></i>
+        <h3 class="font-display uppercase text-lg sm:text-xl text-white mt-5 tracking-wide">Építőipar</h3>
+        <p class="text-ash text-sm mt-2 leading-relaxed">Magas baleseti kockázatú kivitelezés fedezete</p>
+      </div>
+
+      <div class="matrix-box bg-onyx p-7 sm:p-8">
+        <i class="fa-light fa-industry text-amber text-2xl"></i>
+        <h3 class="font-display uppercase text-lg sm:text-xl text-white mt-5 tracking-wide">Nehézipar</h3>
+        <p class="text-ash text-sm mt-2 leading-relaxed">Üzemi felelősség &amp; eszközkockázat</p>
+      </div>
+
+      <div class="matrix-box bg-onyx p-7 sm:p-8">
+        <i class="fa-light fa-truck-fast text-amber text-2xl"></i>
+        <h3 class="font-display uppercase text-lg sm:text-xl text-white mt-5 tracking-wide">Veszélyes Szállítmány</h3>
+        <p class="text-ash text-sm mt-2 leading-relaxed">Speciális rakomány &amp; logisztikai fedezet</p>
+      </div>
+
+      <div class="matrix-box bg-onyx p-7 sm:p-8">
+        <i class="fa-light fa-fire-flame-curved text-amber text-2xl"></i>
+        <h3 class="font-display uppercase text-lg sm:text-xl text-white mt-5 tracking-wide">Extrém Tevékenység</h3>
+        <p class="text-ash text-sm mt-2 leading-relaxed">Egyedi kockázatértékelés, testreszabva</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="py-14 sm:py-20 text-center fade-in" style="animation-delay: 440ms;">
+    <a href="mailto:r.varga@highriskcover.hu"
+       class="cta-hard inline-block bg-amber text-black font-display uppercase text-sm sm:text-base tracking-[0.15em] px-10 py-5 sm:px-12 sm:py-6">
+      Kockázatfelmérés Indítása
+    </a>
+
+    <div class="flex items-center justify-center gap-8 mt-10 text-ash text-sm">
+      <a href="mailto:r.varga@highriskcover.hu" class="hover:text-amber transition-colors duration-300">
+        <i class="fa-light fa-envelope"></i>
+      </a>
+      <a href="tel:+36301234567" class="hover:text-amber transition-colors duration-300">
+        <i class="fa-light fa-phone"></i>
+      </a>
+      <a href="#" class="hover:text-amber transition-colors duration-300">
+        <i class="fa-brands fa-linkedin-in"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="py-8 border-t-2 border-onyx flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+    <p class="font-sans text-[10px] uppercase tracking-[0.2em] text-ash">
+      &copy; 2026 R. Varga &middot; High-Risk Insurance Advisory
+    </p>
+    <p class="font-sans text-[10px] uppercase tracking-[0.2em] text-ash">
+      Budapest &middot; Engedélyszám HR-4471
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>

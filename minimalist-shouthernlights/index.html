@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tóth Marcell — Jövőbiztos Védelem</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          void: '#050505',
+          slate: '#94A3B8',
+          purpleOrb: '#6B21A8',
+          blueOrb: '#0369A1',
+        },
+        fontFamily: {
+          sans: ['Outfit', 'sans-serif'],
+        },
+        backdropBlur: {
+          xl: '24px',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  html, body {
+    background-color: #050505;
+    color: #FFFFFF;
+    overflow-x: hidden;
+  }
+
+  /* ============ AURORA ORBS ============ */
+  .aurora-field {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(110px);
+    will-change: transform;
+  }
+  .orb-purple {
+    width: 560px;
+    height: 560px;
+    background: radial-gradient(circle at 30% 30%, #6B21A8 0%, rgba(107,33,168,0.4) 55%, transparent 75%);
+    top: -120px;
+    left: -120px;
+    opacity: 0.55;
+  }
+  .orb-blue {
+    width: 620px;
+    height: 620px;
+    background: radial-gradient(circle at 60% 40%, #0369A1 0%, rgba(3,105,161,0.4) 55%, transparent 75%);
+    bottom: -160px;
+    right: -160px;
+    opacity: 0.5;
+  }
+
+  /* ============ GLASS SURFACES ============ */
+  .glass {
+    background-color: rgba(255,255,255,0.05);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+
+  .avatar-glow {
+    filter: drop-shadow(0 0 28px rgba(107, 33, 168, 0.45)) drop-shadow(0 0 14px rgba(3, 105, 161, 0.35));
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg, #C4B5FD 0%, #93C5FD 50%, #C4B5FD 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 6s linear infinite;
+  }
+  @keyframes shimmer {
+    to { background-position: -200% center; }
+  }
+
+  /* liquid-glass CTA with gradient border */
+  .cta-liquid {
+    position: relative;
+    background-color: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: background-color 350ms ease, transform 250ms cubic-bezier(0.16,1,0.3,1), box-shadow 350ms ease;
+  }
+  .cta-liquid::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(120deg, #C4B5FD, #93C5FD, #6B21A8);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .cta-liquid:hover {
+    background-color: rgba(255,255,255,0.10);
+    box-shadow: 0 0 32px rgba(107, 33, 168, 0.35), 0 0 18px rgba(3, 105, 161, 0.25);
+    transform: translateY(-2px);
+  }
+  .cta-liquid:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .panel-hover {
+    transition: background-color 350ms ease, transform 300ms cubic-bezier(0.16,1,0.3,1);
+  }
+  .panel-hover:hover {
+    background-color: rgba(255,255,255,0.08);
+    transform: translateY(-3px);
+  }
+
+  .icon-thin {
+    font-weight: 300;
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  ::selection {
+    background: rgba(196, 181, 253, 0.3);
+    color: #FFFFFF;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gradient-text { animation: none; }
+  }
+</style>
+</head>
+
+<body class="font-sans antialiased text-white relative min-h-screen">
+
+<!-- ============ AURORA BACKGROUND ============ -->
+<div class="aurora-field" aria-hidden="true">
+  <div class="orb orb-purple" id="orbPurple"></div>
+  <div class="orb orb-blue" id="orbBlue"></div>
+</div>
+
+<div class="relative z-10 max-w-2xl mx-auto px-6 sm:px-8 py-12 sm:py-20">
+
+  <!-- ============ HERO — FLOATING GLASS CARD ============ -->
+  <section class="glass rounded-[2rem] px-8 py-12 sm:px-12 sm:py-16 text-center fade-in" id="heroCard">
+
+    <div class="flex justify-center">
+      <img
+        src="https://placehold.co/400x400/050505/FFFFFF?text=Broker"
+        alt="Tóth Marcell portré"
+        width="128"
+        height="128"
+        class="avatar-glow w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover"
+      >
+    </div>
+
+    <p class="text-[11px] sm:text-xs uppercase tracking-[0.3em] text-slate mt-7">
+      Tech-Fókuszú Biztosítási Bróker
+    </p>
+
+    <h2 class="text-xl sm:text-2xl font-semibold text-white mt-2">Tóth Marcell</h2>
+
+    <h1 class="gradient-text font-bold text-3xl sm:text-5xl mt-4 leading-tight">
+      Jövőbiztos Védelem.
+    </h1>
+
+    <p class="text-slate text-sm sm:text-base max-w-sm mx-auto mt-5 leading-relaxed">
+      Digitális kockázatkezelés és biztosítási architektúra
+      a holnap technológiai vállalatai számára.
+    </p>
+  </section>
+
+  <!-- ============ STATS / SERVICES — GLASS PANELS ============ -->
+  <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mt-6 sm:mt-7 fade-in" id="panelsRow">
+
+    <div class="panel-hover glass rounded-2xl px-6 py-8 text-center">
+      <i class="fa-thin fa-shield-halved icon-thin text-3xl text-blue-200/90"></i>
+      <h3 class="text-sm font-medium text-white mt-5">Kiberbiztosítás</h3>
+      <p class="text-slate text-xs mt-2 leading-relaxed">Adatvédelmi &amp; rendszerkockázat</p>
+    </div>
+
+    <div class="panel-hover glass rounded-2xl px-6 py-8 text-center">
+      <i class="fa-thin fa-chart-network icon-thin text-3xl text-purple-200/90"></i>
+      <h3 class="text-sm font-medium text-white mt-5">Kockázatmodellezés</h3>
+      <p class="text-slate text-xs mt-2 leading-relaxed">AI-alapú elemzés, valós időben</p>
+    </div>
+
+    <div class="panel-hover glass rounded-2xl px-6 py-8 text-center">
+      <i class="fa-thin fa-rocket-launch icon-thin text-3xl text-blue-200/90"></i>
+      <h3 class="text-sm font-medium text-white mt-5">Startup Védelem</h3>
+      <p class="text-slate text-xs mt-2 leading-relaxed">Skálázható fedezet növekedéshez</p>
+    </div>
+
+  </section>
+
+  <!-- ============ CTA — LIQUID GLASS ============ -->
+  <section class="text-center mt-10 sm:mt-12 fade-in" id="ctaSection">
+    <a href="mailto:marcell.toth@futureinsure.hu"
+       class="cta-liquid inline-flex items-center gap-3 text-white text-sm sm:text-base font-medium px-9 py-4 rounded-full">
+      <i class="fa-light fa-sparkles text-blue-200/90"></i>
+      Kapcsolatfelvétel
+    </a>
+
+    <div class="flex items-center justify-center gap-7 mt-8 text-slate text-sm">
+      <a href="mailto:marcell.toth@futureinsure.hu" class="hover:text-white transition-colors duration-300">
+        <i class="fa-light fa-envelope"></i>
+      </a>
+      <a href="tel:+36301234567" class="hover:text-white transition-colors duration-300">
+        <i class="fa-light fa-phone"></i>
+      </a>
+      <a href="#" class="hover:text-white transition-colors duration-300">
+        <i class="fa-brands fa-linkedin-in"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="text-center mt-12 sm:mt-16 pb-4 fade-in">
+    <p class="text-[10px] uppercase tracking-[0.25em] text-slate/70">
+      &copy; 2026 Tóth Marcell &middot; Future Insure Advisory
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  // Respect reduced-motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ============ ENTRANCE SEQUENCE ============
+  gsap.timeline({ defaults: { ease: 'power3.out' } })
+    .to('#heroCard', { opacity: 1, y: 0, duration: 1.1, delay: 0.15 })
+    .to('#panelsRow', { opacity: 1, y: 0, duration: 0.9 }, '-=0.6')
+    .to('#ctaSection', { opacity: 1, y: 0, duration: 0.9 }, '-=0.55')
+    .to('footer', { opacity: 1, y: 0, duration: 0.8 }, '-=0.5');
+
+  // ============ AURORA FLOATING ORBS ============
+  // Two massive blurred orbs drifting slowly and independently,
+  // looping forever with organic, non-repeating-feeling paths.
+  if (!prefersReducedMotion) {
+    gsap.timeline({ repeat: -1, yoyo: true, defaults: { ease: 'sine.inOut' } })
+      .to('#orbPurple', { x: 90, y: 60, scale: 1.08, duration: 18 }, 0)
+      .to('#orbPurple', { x: -40, y: 120, scale: 0.96, duration: 16 }, 18)
+      .to('#orbPurple', { x: 0, y: 0, scale: 1, duration: 14 }, 34);
+
+    gsap.timeline({ repeat: -1, yoyo: true, defaults: { ease: 'sine.inOut' } })
+      .to('#orbBlue', { x: -110, y: -70, scale: 1.1, duration: 20 }, 0)
+      .to('#orbBlue', { x: 30, y: -130, scale: 0.94, duration: 17 }, 20)
+      .to('#orbBlue', { x: 0, y: 0, scale: 1, duration: 15 }, 37);
+
+    // very slow ambient opacity breathing, offset between the two orbs
+    gsap.to('#orbPurple', {
+      opacity: 0.4,
+      duration: 9,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    });
+    gsap.to('#orbBlue', {
+      opacity: 0.62,
+      duration: 11,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      delay: 2
+    });
+  }
+</script>
+
+</body>
+</html>

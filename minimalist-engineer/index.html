@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andrássy Bence — Private Insurance Advisory</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          charcoal: '#171717',
+          gray: { DEFAULT: '#737373' },
+          gold: '#D4AF37',
+        },
+        fontFamily: {
+          serif: ['"Playfair Display"', 'serif'],
+          sans: ['Lato', 'sans-serif'],
+        },
+        letterSpacing: {
+          'widest-2': '.35em',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #FFFFFF;
+    color: #171717;
+  }
+  .portrait-frame img {
+    filter: grayscale(100%);
+    transition: filter 700ms ease, transform 700ms ease;
+  }
+  .portrait-frame:hover img {
+    filter: grayscale(60%);
+    transform: scale(1.015);
+  }
+  .hairline {
+    border-color: #D4AF37;
+  }
+  .service-row {
+    border-bottom: 1px solid #171717;
+  }
+  .service-row:last-child {
+    border-bottom: 1px solid #171717;
+  }
+  .fade-up {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fadeUp 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fade-up { animation: none; opacity: 1; transform: none; }
+    .portrait-frame img { transition: none; }
+  }
+  ::selection { background: #D4AF37; color: #171717; }
+</style>
+</head>
+
+<body class="font-sans text-charcoal antialiased">
+
+<div class="max-w-3xl mx-auto px-6 sm:px-10">
+
+  <!-- ============ HEADER ============ -->
+  <header class="flex items-center justify-between pt-10 pb-6 sm:pt-14 sm:pb-8">
+    <div class="fade-up" style="animation-delay: 80ms;">
+      <h2 class="font-serif text-lg sm:text-xl tracking-wide text-charcoal">Andrássy Bence</h2>
+      <p class="text-[10px] sm:text-xs tracking-widest-2 uppercase text-gray mt-1">Private Insurance Advisory</p>
+    </div>
+    <nav class="fade-up" style="animation-delay: 160ms;">
+      <a href="#contact" class="text-[10px] sm:text-xs tracking-widest-2 uppercase text-charcoal border-b border-charcoal pb-0.5 hover:text-gold hover:border-gold transition-colors duration-300">
+        Kapcsolat
+      </a>
+    </nav>
+  </header>
+
+  <hr class="hairline border-t" style="border-top-width: 1px;">
+
+  <!-- ============ HERO ============ -->
+  <section class="text-center pt-14 pb-16 sm:pt-20 sm:pb-24">
+
+    <div class="portrait-frame fade-up inline-block w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] overflow-hidden mx-auto" style="animation-delay: 240ms;">
+      <img
+        src="https://placehold.co/400x400/171717/FFFFFF?text=Portrait"
+        alt="Andrássy Bence portré"
+        width="400"
+        height="400"
+        class="w-full h-full object-cover"
+      >
+    </div>
+
+    <p class="fade-up text-[10px] sm:text-xs tracking-widest-2 uppercase text-gray mt-9 sm:mt-12" style="animation-delay: 320ms;">
+      Vagyonbiztosítási Stratégia &mdash; Est. 2009
+    </p>
+
+    <h1 class="fade-up font-serif font-medium text-charcoal leading-[1.04] mt-5 sm:mt-6 text-[2.75rem] sm:text-7xl md:text-8xl" style="animation-delay: 400ms;">
+      Biztonság.<br>
+      <span class="italic font-normal">Kompromisszumok</span><br>
+      Nélkül.
+    </h1>
+
+    <p class="fade-up text-gray text-sm sm:text-base max-w-md mx-auto mt-8 leading-relaxed" style="animation-delay: 480ms;">
+      Diszkrét, személyre szabott biztosítási tanácsadás magánszemélyek
+      és vállalatok számára, akik számára a védelem nem alku tárgya.
+    </p>
+  </section>
+
+  <hr class="hairline border-t" style="border-top-width: 1px;">
+
+  <!-- ============ SERVICES ============ -->
+  <section class="py-14 sm:py-20 fade-up" style="animation-delay: 560ms;">
+    <p class="text-[10px] sm:text-xs tracking-widest-2 uppercase text-gray mb-8 sm:mb-10">
+      Szakterületek
+    </p>
+
+    <ul>
+      <li class="service-row group flex items-center justify-between py-6 sm:py-7">
+        <div class="flex items-baseline gap-4 sm:gap-6">
+          <i class="fa-light fa-heart-pulse text-gold text-base sm:text-lg w-5 text-center"></i>
+          <span class="font-serif text-2xl sm:text-3xl text-charcoal group-hover:translate-x-1.5 transition-transform duration-300 inline-block">
+            Életbiztosítás
+          </span>
+        </div>
+        <span class="hidden sm:block text-gray text-sm max-w-[220px] text-right leading-snug">
+          Hosszú távú pénzügyi biztonság a családja számára
+        </span>
+      </li>
+
+      <li class="service-row group flex items-center justify-between py-6 sm:py-7">
+        <div class="flex items-baseline gap-4 sm:gap-6">
+          <i class="fa-light fa-house-chimney text-gold text-base sm:text-lg w-5 text-center"></i>
+          <span class="font-serif text-2xl sm:text-3xl text-charcoal group-hover:translate-x-1.5 transition-transform duration-300 inline-block">
+            Vagyonvédelem
+          </span>
+        </div>
+        <span class="hidden sm:block text-gray text-sm max-w-[220px] text-right leading-snug">
+          Ingatlanok, műgyűjtemények és magánvagyon biztosítása
+        </span>
+      </li>
+
+      <li class="service-row group flex items-center justify-between py-6 sm:py-7">
+        <div class="flex items-baseline gap-4 sm:gap-6">
+          <i class="fa-light fa-building-columns text-gold text-base sm:text-lg w-5 text-center"></i>
+          <span class="font-serif text-2xl sm:text-3xl text-charcoal group-hover:translate-x-1.5 transition-transform duration-300 inline-block">
+            Vállalati
+          </span>
+        </div>
+        <span class="hidden sm:block text-gray text-sm max-w-[220px] text-right leading-snug">
+          Felelősségbiztosítás és kockázatkezelés vezetők számára
+        </span>
+      </li>
+    </ul>
+  </section>
+
+  <hr class="hairline border-t" style="border-top-width: 1px;">
+
+  <!-- ============ CTA / CONTACT ============ -->
+  <section id="contact" class="py-16 sm:py-24 text-center fade-up" style="animation-delay: 640ms;">
+    <h3 class="font-serif italic text-2xl sm:text-3xl text-charcoal mb-3">
+      Kezdjünk el beszélgetni.
+    </h3>
+    <p class="text-gray text-sm sm:text-base max-w-sm mx-auto mb-10 leading-relaxed">
+      Egy huszonöt perces konzultáció, amely tisztázza, hol áll
+      jelenleg a védelme &mdash; és hol állhatna.
+    </p>
+
+    <a href="mailto:bence.andrassy@privateadvisory.hu"
+       class="inline-block border border-charcoal text-charcoal text-[11px] sm:text-xs tracking-widest-2 uppercase px-10 py-4 sm:px-12 sm:py-5 hover:bg-charcoal hover:text-white transition-colors duration-300">
+      Időpont Egyeztetése
+    </a>
+
+    <div class="flex items-center justify-center gap-8 sm:gap-10 mt-12 text-gray text-sm">
+      <a href="mailto:bence.andrassy@privateadvisory.hu" class="hover:text-gold transition-colors duration-300 flex items-center gap-2">
+        <i class="fa-light fa-envelope"></i>
+        <span class="hidden sm:inline">bence.andrassy@privateadvisory.hu</span>
+      </a>
+      <a href="tel:+36301234567" class="hover:text-gold transition-colors duration-300 flex items-center gap-2">
+        <i class="fa-light fa-phone"></i>
+        <span class="hidden sm:inline">+36 30 123 4567</span>
+      </a>
+      <a href="#" class="hover:text-gold transition-colors duration-300 flex items-center gap-2">
+        <i class="fa-brands fa-linkedin-in"></i>
+      </a>
+    </div>
+  </section>
+
+  <hr class="hairline border-t" style="border-top-width: 1px;">
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+    <p class="text-[10px] tracking-widest-2 uppercase text-gray">
+      &copy; 2026 Andrássy Bence — Private Insurance Advisory
+    </p>
+    <p class="text-[10px] tracking-widest-2 uppercase text-gray">
+      Budapest &middot; Bécs &middot; Zürich
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>

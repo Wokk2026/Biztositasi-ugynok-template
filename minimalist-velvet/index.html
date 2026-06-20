@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eszterházy Bálint — Generációk Öröksége</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          pearl: '#F8F9FA',
+          rose: '#A09294',
+          gold: '#D4AF37',
+        },
+        fontFamily: {
+          serif: ['"Cormorant Garamond"', 'serif'],
+          sans: ['Lato', 'sans-serif'],
+        },
+        letterSpacing: {
+          'widest-2': '.3em',
+          'widest-3': '.45em',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  body {
+    background: linear-gradient(160deg, #121212 0%, #1A0E11 45%, #2A0A10 100%);
+    color: #F8F9FA;
+    min-height: 100vh;
+  }
+
+  .hairline {
+    border-color: rgba(212, 175, 55, 0.45);
+  }
+
+  .frame-box {
+    border: 1px solid #D4AF37;
+    padding: 10px;
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeIn 1100ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in { animation: none; opacity: 1; transform: none; }
+  }
+
+  .philosophy-row {
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    transition: padding-left 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .philosophy-row:last-child {
+    border-bottom: none;
+  }
+  .philosophy-row:hover {
+    padding-left: 0.5rem;
+  }
+
+  .cta-outline {
+    transition: background-color 400ms ease, color 400ms ease;
+  }
+  .cta-outline:hover {
+    background-color: #D4AF37;
+    color: #121212;
+  }
+
+  ::selection {
+    background: #D4AF37;
+    color: #121212;
+  }
+</style>
+</head>
+
+<body class="font-sans antialiased text-pearl">
+
+<div class="max-w-xl mx-auto px-6 sm:px-8">
+
+  <!-- ============ HEADER ============ -->
+  <header class="flex items-center justify-between pt-10 pb-2 fade-in" style="animation-delay: 60ms;">
+    <p class="font-serif italic text-lg text-pearl">Eszterházy Bálint</p>
+    <p class="text-[10px] sm:text-xs tracking-widest-2 uppercase text-rose">Est. 1987</p>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="text-center pt-12 pb-16 sm:pt-16 sm:pb-20">
+
+    <!-- portrait framed like a painting -->
+    <div class="frame-box fade-in inline-block" style="animation-delay: 160ms;">
+      <img
+        src="https://placehold.co/400x400/121212/D4AF37?text=Advisor"
+        alt="Eszterházy Bálint portréja"
+        width="220"
+        height="220"
+        class="w-[200px] h-[200px] sm:w-[240px] sm:h-[240px] object-cover block"
+      >
+    </div>
+
+    <p class="fade-in text-[10px] sm:text-xs tracking-widest-2 uppercase text-gold mt-9" style="animation-delay: 240ms;">
+      Vagyon &amp; Biztosítási Tanácsadó
+    </p>
+
+    <h1 class="fade-in font-serif text-pearl leading-[1.05] mt-5 text-[2.75rem] sm:text-6xl md:text-7xl" style="animation-delay: 320ms;">
+      Generációk<br><span class="italic">Öröksége.</span>
+    </h1>
+
+    <p class="fade-in text-rose text-sm sm:text-base max-w-sm mx-auto mt-8 leading-relaxed" style="animation-delay: 400ms;">
+      Diszkrét tanácsadás családoknak, akik számára a vagyon
+      nem csupán szám &mdash; hanem örökség, amit tovább kell adni.
+    </p>
+  </section>
+
+  <hr class="hairline border-t" style="border-top-width: 1px;">
+
+  <!-- ============ PHILOSOPHY ============ -->
+  <section class="py-14 sm:py-20 fade-in" style="animation-delay: 480ms;">
+    <p class="text-[10px] sm:text-xs tracking-widest-2 uppercase text-rose mb-8 sm:mb-10 text-center">
+      Filozófia
+    </p>
+
+    <ul>
+      <li class="philosophy-row flex items-center justify-between py-6 sm:py-7">
+        <div class="flex items-baseline gap-5 sm:gap-6">
+          <i class="fa-light fa-mask text-gold text-base sm:text-lg w-5 text-center"></i>
+          <span class="font-serif text-2xl sm:text-3xl text-pearl">Diszkréció</span>
+        </div>
+        <span class="hidden sm:block text-rose text-sm max-w-[210px] text-right leading-snug">
+          Ügyei magánjellegűek maradnak, mindenkor
+        </span>
+      </li>
+
+      <li class="philosophy-row flex items-center justify-between py-6 sm:py-7">
+        <div class="flex items-baseline gap-5 sm:gap-6">
+          <i class="fa-light fa-column text-gold text-base sm:text-lg w-5 text-center"></i>
+          <span class="font-serif text-2xl sm:text-3xl text-pearl">Stabilitás</span>
+        </div>
+        <span class="hidden sm:block text-rose text-sm max-w-[210px] text-right leading-snug">
+          Évtizedeken átívelő pénzügyi biztonság
+        </span>
+      </li>
+
+      <li class="philosophy-row flex items-center justify-between py-6 sm:py-7">
+        <div class="flex items-baseline gap-5 sm:gap-6">
+          <i class="fa-light fa-seedling text-gold text-base sm:text-lg w-5 text-center"></i>
+          <span class="font-serif text-2xl sm:text-3xl text-pearl">Növekedés</span>
+        </div>
+        <span class="hidden sm:block text-rose text-sm max-w-[210px] text-right leading-snug">
+          Vagyon, amely generációkon át gyarapszik
+        </span>
+      </li>
+    </ul>
+  </section>
+
+  <hr class="hairline border-t" style="border-top-width: 1px;">
+
+  <!-- ============ CONTACT ============ -->
+  <section class="py-16 sm:py-24 text-center fade-in" style="animation-delay: 560ms;">
+    <a href="mailto:balint.eszterhazy@heritageadvisory.hu"
+       class="cta-outline inline-block border border-gold text-gold text-[11px] sm:text-xs tracking-widest-3 uppercase px-10 py-4 sm:px-12 sm:py-5">
+      Kapcsolatfelvétel
+    </a>
+
+    <div class="flex items-center justify-center gap-8 mt-10 text-rose text-sm">
+      <a href="mailto:balint.eszterhazy@heritageadvisory.hu" class="hover:text-gold transition-colors duration-300">
+        <i class="fa-light fa-envelope"></i>
+      </a>
+      <a href="tel:+36301234567" class="hover:text-gold transition-colors duration-300">
+        <i class="fa-light fa-phone"></i>
+      </a>
+      <a href="#" class="hover:text-gold transition-colors duration-300">
+        <i class="fa-brands fa-linkedin-in"></i>
+      </a>
+    </div>
+  </section>
+
+  <hr class="hairline border-t" style="border-top-width: 1px;">
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="py-8 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+    <p class="text-[10px] tracking-widest-2 uppercase text-rose">
+      &copy; 2026 Eszterházy Bálint
+    </p>
+    <p class="text-[10px] tracking-widest-2 uppercase text-rose">
+      Budapest &middot; Bécs &middot; Genf
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>
