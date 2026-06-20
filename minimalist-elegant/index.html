@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kovács András — Prémium Biztosítási Bróker</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            charcoal:    '#171717',
+            'gray-mid':  '#737373',
+            gold:        '#D4AF37',
+            white:       '#FFFFFF',
+          },
+          fontFamily: {
+            playfair: ['"Playfair Display"', 'Georgia', 'serif'],
+            lato:     ['Lato', 'system-ui', 'sans-serif'],
+          },
+          letterSpacing: {
+            widest2: '0.25em',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* ─── Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      background-color: #FFFFFF;
+      color: #171717;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Lato', system-ui, sans-serif;
+      font-weight: 300;
+      background-color: #FFFFFF;
+      color: #171717;
+    }
+
+    /* ─── Gold hairline ─────────────────────────────────── */
+    .hairline-gold {
+      border-color: #D4AF37;
+    }
+
+    /* ─── Portrait ──────────────────────────────────────── */
+    .portrait {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      height: 400px;
+      object-fit: cover;
+      filter: grayscale(100%);
+      border-radius: 0;
+      image-rendering: crisp-edges;
+    }
+
+    /* ─── Typography ────────────────────────────────────── */
+    .font-playfair { font-family: 'Playfair Display', Georgia, serif; }
+    .font-lato     { font-family: 'Lato', system-ui, sans-serif; }
+
+    /* ─── CTA Button ────────────────────────────────────── */
+    .btn-outline {
+      display: inline-block;
+      padding: 0.875rem 2.5rem;
+      border: 1px solid #171717;
+      color: #171717;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      background-color: transparent;
+      cursor: pointer;
+      transition: background-color 200ms ease, color 200ms ease;
+    }
+    .btn-outline:hover,
+    .btn-outline:focus {
+      background-color: #171717;
+      color: #FFFFFF;
+      outline: none;
+    }
+    .btn-outline:focus-visible {
+      outline: 2px solid #D4AF37;
+      outline-offset: 3px;
+    }
+
+    /* ─── Service row hover ─────────────────────────────── */
+    .service-row {
+      transition: padding-left 180ms ease;
+    }
+    .service-row:hover {
+      padding-left: 0.5rem;
+    }
+
+    /* ─── Reduced motion ────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .btn-outline,
+      .service-row { transition: none; }
+    }
+  </style>
+</head>
+
+<body class="bg-white text-charcoal">
+
+  <!-- ════════════════════════════════════════════════════
+       HEADER — Minimal top bar
+  ════════════════════════════════════════════════════ -->
+  <header class="w-full border-b border-charcoal" role="banner">
+    <div class="max-w-2xl mx-auto px-6 py-5 flex items-baseline justify-between">
+
+      <!-- Name -->
+      <span class="font-playfair text-base font-medium tracking-wide text-charcoal">
+        Kovács András
+      </span>
+
+      <!-- Est. marker -->
+      <span class="font-lato text-xs font-300 tracking-widest2 text-gray-mid uppercase">
+        Est.&thinsp;2012
+      </span>
+
+    </div>
+
+    <!-- Gold accent hairline sits below the charcoal border -->
+    <div class="w-full h-px hairline-gold bg-gold opacity-60"></div>
+  </header>
+
+
+  <!-- ════════════════════════════════════════════════════
+       HERO — Portrait + Headline
+  ════════════════════════════════════════════════════ -->
+  <main id="main-content">
+
+    <section aria-label="Bemutatkozás" class="max-w-2xl mx-auto px-6 pt-14 pb-0">
+
+      <!-- Portrait: 400×400, greyscale, zero radius -->
+      <figure class="mb-0">
+        <img
+          src="https://placehold.co/400x400/171717/FFFFFF?text=Portrait"
+          alt="Kovács András portréfotója"
+          width="400"
+          height="400"
+          class="portrait"
+          loading="eager"
+        />
+        <!-- Gold hairline below portrait -->
+        <div class="w-full h-px bg-gold opacity-70 mt-0"></div>
+      </figure>
+
+      <!-- Massive headline -->
+      <div class="pt-10 pb-2">
+        <h1 class="font-playfair text-4xl sm:text-5xl leading-tight font-medium text-charcoal">
+          Biztonság.<br />
+          <em class="not-italic font-normal text-gray-mid">Kompromisszumok</em><br />
+          Nélkül.
+        </h1>
+      </div>
+
+      <!-- Sub-tagline -->
+      <p class="font-lato text-sm font-300 tracking-widest2 text-gray-mid uppercase mt-5 mb-0">
+        Prémium Biztosítási Bróker &mdash; Budapest
+      </p>
+
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         DIVIDER
+    ══════════════════════════════════════════════════ -->
+    <div class="max-w-2xl mx-auto px-6 mt-14">
+      <div class="w-full h-px bg-charcoal"></div>
+      <div class="w-8 h-px bg-gold mt-px"></div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════
+         ABOUT — One-liner editorial pull quote
+    ══════════════════════════════════════════════════ -->
+    <section aria-label="Bemutatkozás rövid" class="max-w-2xl mx-auto px-6 pt-10 pb-0">
+      <p class="font-playfair text-lg sm:text-xl italic text-charcoal leading-relaxed max-w-sm">
+        "Tizenhárom évnyi tapasztalat. Egyetlen hivatás: az Ön védelme."
+      </p>
+      <p class="font-lato text-sm font-300 text-gray-mid leading-relaxed mt-4 max-w-xs">
+        Független tanácsadóként az Ön érdekei a vezérelvem — nem a biztosítótársaságoké.
+      </p>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         DIVIDER
+    ══════════════════════════════════════════════════ -->
+    <div class="max-w-2xl mx-auto px-6 mt-14">
+      <div class="w-full h-px bg-charcoal"></div>
+      <div class="w-8 h-px bg-gold mt-px"></div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════
+         SERVICES LIST — Vertical rows with bottom borders
+    ══════════════════════════════════════════════════ -->
+    <section aria-labelledby="services-heading" class="max-w-2xl mx-auto px-6 pt-10 pb-0">
+
+      <h2 id="services-heading" class="font-lato text-xs font-700 tracking-widest2 text-gray-mid uppercase mb-8">
+        Szolgáltatások
+      </h2>
+
+      <ul class="list-none m-0 p-0" role="list">
+
+        <!-- 01 · Életbiztosítás -->
+        <li class="service-row border-b border-charcoal py-6 group cursor-default">
+          <div class="flex items-start justify-between gap-6">
+            <div class="flex items-center gap-4">
+              <i class="fa-solid fa-shield-heart text-gold text-xs mt-1 flex-shrink-0" aria-hidden="true"></i>
+              <div>
+                <p class="font-playfair text-xl font-medium text-charcoal leading-snug">
+                  Életbiztosítás
+                </p>
+                <p class="font-lato text-xs font-300 text-gray-mid mt-1 leading-relaxed max-w-xs">
+                  Kockázati, befektetési és vegyes életbiztosítási megoldások személyre szabva.
+                </p>
+              </div>
+            </div>
+            <span class="font-lato text-xs text-gray-mid mt-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200" aria-hidden="true">
+              →
+            </span>
+          </div>
+        </li>
+
+        <!-- 02 · Vagyonvédelem -->
+        <li class="service-row border-b border-charcoal py-6 group cursor-default">
+          <div class="flex items-start justify-between gap-6">
+            <div class="flex items-center gap-4">
+              <i class="fa-solid fa-building-columns text-gold text-xs mt-1 flex-shrink-0" aria-hidden="true"></i>
+              <div>
+                <p class="font-playfair text-xl font-medium text-charcoal leading-snug">
+                  Vagyonvédelem
+                </p>
+                <p class="font-lato text-xs font-300 text-gray-mid mt-1 leading-relaxed max-w-xs">
+                  Ingatlan, ingóság és felelősségbiztosítás — a teljes vagyoni értéklánc védelme.
+                </p>
+              </div>
+            </div>
+            <span class="font-lato text-xs text-gray-mid mt-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200" aria-hidden="true">
+              →
+            </span>
+          </div>
+        </li>
+
+        <!-- 03 · Vállalati -->
+        <li class="service-row border-b border-charcoal py-6 group cursor-default">
+          <div class="flex items-start justify-between gap-6">
+            <div class="flex items-center gap-4">
+              <i class="fa-solid fa-briefcase text-gold text-xs mt-1 flex-shrink-0" aria-hidden="true"></i>
+              <div>
+                <p class="font-playfair text-xl font-medium text-charcoal leading-snug">
+                  Vállalati Megoldások
+                </p>
+                <p class="font-lato text-xs font-300 text-gray-mid mt-1 leading-relaxed max-w-xs">
+                  Csoportos biztosítások, üzleti kockázatkezelés és D&O fedezetek cégek számára.
+                </p>
+              </div>
+            </div>
+            <span class="font-lato text-xs text-gray-mid mt-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200" aria-hidden="true">
+              →
+            </span>
+          </div>
+        </li>
+
+      </ul>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         CONTACT / CTA
+    ══════════════════════════════════════════════════ -->
+    <section aria-labelledby="cta-heading" class="max-w-2xl mx-auto px-6 pt-14 pb-0">
+
+      <h2 id="cta-heading" class="font-lato text-xs font-700 tracking-widest2 text-gray-mid uppercase mb-8">
+        Kapcsolat
+      </h2>
+
+      <!-- Contact details -->
+      <address class="not-italic space-y-3 mb-10">
+
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-phone text-gold text-xs w-4 text-center" aria-hidden="true"></i>
+          <a href="tel:+36301234567"
+             class="font-lato text-sm font-300 text-charcoal hover:text-gray-mid transition-colors focus-visible:outline-none focus-visible:underline">
+            +36 30 123 4567
+          </a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-envelope text-gold text-xs w-4 text-center" aria-hidden="true"></i>
+          <a href="mailto:andras@kovacsbiztos.hu"
+             class="font-lato text-sm font-300 text-charcoal hover:text-gray-mid transition-colors focus-visible:outline-none focus-visible:underline">
+            andras@kovacsbiztos.hu
+          </a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-location-dot text-gold text-xs w-4 text-center" aria-hidden="true"></i>
+          <span class="font-lato text-sm font-300 text-charcoal">
+            1051 Budapest, Vörösmarty tér 4.
+          </span>
+        </div>
+
+      </address>
+
+      <!-- Stark outline CTA -->
+      <a href="mailto:andras@kovacsbiztos.hu?subject=Ingyenes%20konzultáció" class="btn-outline" role="button">
+        Ingyenes Konzultáció
+      </a>
+
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         STATS STRIP — Three numbers, no decoration
+    ══════════════════════════════════════════════════ -->
+    <div class="max-w-2xl mx-auto px-6 mt-16">
+      <div class="w-full h-px bg-charcoal"></div>
+      <div class="w-8 h-px bg-gold mt-px"></div>
+    </div>
+
+    <section aria-label="Számokban" class="max-w-2xl mx-auto px-6 pt-10 pb-0">
+      <dl class="grid grid-cols-3 gap-0 divide-x divide-charcoal">
+
+        <div class="pr-6 pb-2">
+          <dt class="font-lato text-xs font-300 text-gray-mid uppercase tracking-widest mb-2">
+            Év tapasztalat
+          </dt>
+          <dd class="font-playfair text-3xl font-medium text-charcoal">
+            13
+          </dd>
+        </div>
+
+        <div class="px-6 pb-2">
+          <dt class="font-lato text-xs font-300 text-gray-mid uppercase tracking-widest mb-2">
+            Aktív ügyfél
+          </dt>
+          <dd class="font-playfair text-3xl font-medium text-charcoal">
+            340<span class="text-gold">+</span>
+          </dd>
+        </div>
+
+        <div class="pl-6 pb-2">
+          <dt class="font-lato text-xs font-300 text-gray-mid uppercase tracking-widest mb-2">
+            Partner
+          </dt>
+          <dd class="font-playfair text-3xl font-medium text-charcoal">
+            12
+          </dd>
+        </div>
+
+      </dl>
+    </section>
+
+  </main>
+
+
+  <!-- ════════════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════════ -->
+  <footer class="max-w-2xl mx-auto px-6 mt-16 pb-12" role="contentinfo">
+
+    <div class="w-full h-px bg-charcoal mb-px"></div>
+    <div class="w-8 h-px bg-gold mb-8"></div>
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+      <!-- Left: name + license -->
+      <div>
+        <p class="font-playfair text-sm text-charcoal">Kovács András</p>
+        <p class="font-lato text-xs font-300 text-gray-mid mt-1">
+          MABISZ regisztrált független biztosítási bróker
+        </p>
+      </div>
+
+      <!-- Right: social / regulatory -->
+      <div class="flex items-center gap-5">
+        <a href="#" aria-label="LinkedIn profil"
+           class="text-gray-mid hover:text-charcoal transition-colors text-sm">
+          <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+        </a>
+        <a href="#" aria-label="MNB nyilvántartás"
+           class="font-lato text-xs font-300 text-gray-mid hover:text-charcoal transition-colors tracking-wide">
+          MNB reg.
+        </a>
+        <span class="font-lato text-xs font-300 text-gray-mid">&copy; 2025</span>
+      </div>
+
+    </div>
+
+  </footer>
+
+</body>
+</html>

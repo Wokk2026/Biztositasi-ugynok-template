@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VarjaSS — 3D Architektúrák</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark:    #0B0D14;
+      --silver:     #E5E7EB;
+      --accent:     #9CA3AF;
+      --glow-red:   rgba(220, 38, 38, 0.08);
+      --border:     rgba(255, 255, 255, 0.06);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      font-family: 'Inter', sans-serif;
+      color: var(--silver);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 2rem; left: 2rem;
+      color: var(--accent);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: color 0.3s ease, transform 0.3s ease;
+      z-index: 50;
+    }
+    .back-btn:hover { color: #fff; transform: translateX(-5px); }
+
+    header { padding: 5rem 2rem 3rem 2rem; text-align: center; }
+    .cat-title { font-family: 'Cinzel', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; letter-spacing: 0.1em; color: #fff; margin-bottom: 1rem; }
+    .cat-desc { font-size: 0.9rem; color: var(--accent); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2.5rem;
+      padding: 0 2rem 5rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .tile-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .tile-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 20px var(--glow-red);
+    }
+
+    .tile-image-wrapper {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      position: relative;
+      background: #111827;
+    }
+    
+    .tile-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      transition: transform 0.6s ease;
+    }
+
+    .tile-card:hover .tile-image { transform: scale(1.05); }
+
+    .tile-content { padding: 1.5rem; }
+    .tile-name { font-family: 'Cinzel', serif; font-size: 1.25rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem; }
+    .tile-meta { font-size: 0.75rem; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
+    .tile-tag { background: rgba(255,255,255,0.05); padding: 0.2rem 0.6rem; border-radius: 4px; letter-spacing: 0.05em; }
+  </style>
+</head>
+<body>
+
+  <a href="katalogus.html" class="back-btn">
+    <i class="fa-solid fa-arrow-left-long"></i> Vissza a kategóriákhoz
+  </a>
+
+  <header id="header-reveal">
+    <h1 class="cat-title">3D Weboldal</h1>
+    <p class="cat-desc">A jövő standardja. Térbeli interaktív WebGL környezet a maximális vizuális hatás és a technológiai felsőbbrendűség érdekében.</p>
+  </header>
+
+  <main class="gallery-grid">
+    
+    <!-- 1. Sablon -->
+    <a href="/web3d-particle/index.html" class="tile-card">
+      <div class="tile-image-wrapper">
+        <img src="https://placehold.co/800x500/1E293B/FFFFFF?text=Particle+Net+Preview" alt="Particle Preview" class="tile-image" />
+      </div>
+      <div class="tile-content">
+        <h3 class="tile-name">The Particle Net</h3>
+        <div class="tile-meta">
+          <span class="tile-tag">Hálózatos / Vállalati</span>
+          <span><i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 2. Sablon -->
+    <a href="/web3d-wave/index.html" class="tile-card">
+      <div class="tile-image-wrapper">
+        <img src="https://placehold.co/800x500/1E293B/FFFFFF?text=Wave+Sablon+Preview" alt="Wave Preview" class="tile-image" />
+      </div>
+      <div class="tile-content">
+        <h3 class="tile-name">The Wave</h3>
+        <div class="tile-meta">
+          <span class="tile-tag">Kreatív / Hullámzó tér</span>
+          <span><i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </div>
+    </a>
+
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const tl = gsap.timeline();
+      tl.from("#header-reveal", { y: -30, opacity: 0, duration: 1, ease: "power3.out", delay: 0.2 })
+        .to(".tile-card", { y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: "back.out(1.2)" }, "-=0.5");
+    });
+  </script>
+</body>
+</html>

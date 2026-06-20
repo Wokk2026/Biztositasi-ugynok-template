@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Örökség & Bizalom — Vagyon- és Családi Biztosítási Tervezés</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,300&display=swap" rel="stylesheet">
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          cream: '#FFFBEB',
+          forest: '#064E3B',
+          'forest-dark': '#043829',
+          terracotta: '#C2410C',
+        },
+        fontFamily: {
+          sans: ['Montserrat', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --bg-color: #FFFBEB;
+    --text-color: #064E3B;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    transition: background-color 0.4s ease;
+  }
+
+  /* Wide, elegant geometric tracking for headings */
+  .heading-wide {
+    letter-spacing: 0.01em;
+    font-weight: 300;
+  }
+
+  .label-wide {
+    letter-spacing: 0.35em;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  /* Line mask for hero reveal */
+  .line-mask {
+    overflow: hidden;
+    display: block;
+  }
+
+  .line-mask .line-inner {
+    display: block;
+    will-change: transform, opacity;
+  }
+
+  /* Portrait Arch */
+  .arch-frame {
+    border-radius: 200px 200px 0 0;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 40px 80px -20px rgba(6, 78, 59, 0.35);
+  }
+
+  .arch-frame img {
+    filter: sepia(0.35) saturate(1.05) contrast(1.02) brightness(0.98);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.08);
+  }
+
+  .arch-glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(194, 65, 12, 0) 60%, rgba(6, 78, 59, 0.25) 100%);
+    pointer-events: none;
+  }
+
+  /* Quote word reveal */
+  .word {
+    display: inline-block;
+    opacity: 0.12;
+    transition: opacity 0.4s ease;
+  }
+
+  /* Divider organic line */
+  .organic-rule {
+    width: 1px;
+    background: currentColor;
+    opacity: 0.25;
+  }
+
+  /* Texture grain overlay - subtle organic feel */
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    z-index: 50;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .btn-outline {
+    border: 1px solid currentColor;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-outline:hover {
+    background-color: currentColor;
+  }
+  .btn-outline:hover .btn-text {
+    mix-blend-mode: difference;
+    color: white;
+  }
+
+  ::selection {
+    background: #C2410C;
+    color: #FFFBEB;
+  }
+
+  /* Custom scrollbar - subtle */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(6,78,59,0.3); border-radius: 10px; }
+
+  .stat-num {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  @media (max-width: 768px) {
+    .arch-frame { border-radius: 120px 120px 0 0; }
+  }
+</style>
+</head>
+
+<body class="antialiased">
+
+<div class="grain"></div>
+
+<!-- ============ NAV ============ -->
+<nav class="fixed top-0 left-0 w-full z-40 mix-blend-difference">
+  <div class="max-w-7xl mx-auto px-6 md:px-12 py-7 flex items-center justify-between text-cream">
+    <div class="label-wide text-xs">Örökség &amp; Bizalom</div>
+    <div class="hidden md:flex items-center gap-10 label-wide text-[11px]">
+      <a href="#filozofia" class="hover:opacity-60 transition-opacity">Filozófia</a>
+      <a href="#szolgaltatasok" class="hover:opacity-60 transition-opacity">Szolgáltatások</a>
+      <a href="#kapcsolat" class="hover:opacity-60 transition-opacity">Kapcsolat</a>
+    </div>
+    <div class="label-wide text-[11px] border border-current px-5 py-2">Időpont</div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="hero" class="relative min-h-[100svh] flex flex-col justify-center px-6 md:px-12 pt-32 pb-16">
+  <div class="max-w-7xl mx-auto w-full">
+
+    <div class="overflow-hidden mb-6">
+      <p id="hero-eyebrow" class="label-wide text-xs md:text-sm text-terracotta opacity-0">Generációkon átívelő vagyontervezés</p>
+    </div>
+
+    <h1 class="heading-wide text-[12vw] md:text-[7.2vw] leading-[0.95] mb-10">
+      <span class="line-mask"><span class="line-inner">Gondoskodás</span></span>
+      <span class="line-mask"><span class="line-inner">a&nbsp;Generációkról</span></span>
+    </h1>
+
+    <div class="overflow-hidden max-w-xl">
+      <p id="hero-sub" class="line-inner text-base md:text-lg font-light leading-relaxed opacity-0">
+        Csendes bizonyosság a jövőnek. Olyan vagyon- és életbiztosítási stratégiákat építünk,
+        amelyek generációkon át megőrzik, amit szeretteiért felépített.
+      </p>
+    </div>
+
+    <div id="hero-cta" class="mt-12 flex items-center gap-6 opacity-0">
+      <button class="btn-outline px-8 py-4 label-wide text-xs">
+        <span class="btn-text">Kezdjük el</span>
+      </button>
+      <span class="label-wide text-xs opacity-60">01 — Magánkonzultáció</span>
+    </div>
+
+  </div>
+
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-70">
+    <span class="label-wide text-[10px]">Görgessen</span>
+    <div class="w-px h-12 bg-current relative overflow-hidden">
+      <div id="scroll-line" class="absolute top-0 left-0 w-full h-full bg-terracotta origin-top"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PORTRAIT ARCH SECTION ============ -->
+<section id="filozofia" class="relative px-6 md:px-12 py-24 md:py-36">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-12 gap-12 md:gap-16 items-center">
+
+    <div class="md:col-span-5 order-2 md:order-1">
+      <p class="label-wide text-xs text-terracotta mb-6">A mi filozófiánk</p>
+      <h2 class="heading-wide text-4xl md:text-5xl leading-tight mb-8">
+        A vagyon nem cél.<br>Eszköz a&nbsp;<em class="not-italic text-terracotta font-normal">nyugalomhoz.</em>
+      </h2>
+      <p class="text-base font-light leading-relaxed opacity-80 mb-6 max-w-md">
+        Húsz éve kísérjük el családokat a felelős vagyonátadás útján. Nem termékeket adunk el —
+        bizalmat építünk, amely túléli az időt, és biztonságot teremt azoknak, akiket a legjobban szeret.
+      </p>
+      <div class="flex gap-12 mt-10">
+        <div>
+          <div class="stat-num text-3xl md:text-4xl font-light text-terracotta">240+</div>
+          <div class="label-wide text-[10px] mt-2 opacity-60">Családi vagyonterv</div>
+        </div>
+        <div>
+          <div class="stat-num text-3xl md:text-4xl font-light text-terracotta">3</div>
+          <div class="label-wide text-[10px] mt-2 opacity-60">Generáció tapasztalat</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="md:col-span-7 order-1 md:order-2 flex justify-center">
+      <div id="arch-wrapper" class="relative w-[280px] h-[340px] md:w-[400px] md:h-[480px]">
+        <div id="arch-frame" class="arch-frame w-full h-full">
+          <img src="https://placehold.co/400x400/064E3B/FFFBEB?text=Portrait" alt="Családi tanácsadói portré" loading="lazy">
+          <div class="arch-glow"></div>
+        </div>
+        <div class="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 bg-cream border border-forest/20 px-6 py-4 shadow-xl">
+          <p class="label-wide text-[10px] text-forest">Bizalmi Tanácsadó</p>
+          <p class="text-sm font-light text-forest mt-1">Horváth Eleonóra</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ VALUE SECTION — COLOR MORPH ============ -->
+<section id="szolgaltatasok" class="relative px-6 md:px-12 py-32 md:py-48" data-morph-section>
+  <div class="max-w-7xl mx-auto">
+
+    <div class="max-w-2xl mb-24">
+      <p id="morph-eyebrow" class="label-wide text-xs text-terracotta mb-6">Szolgáltatásaink</p>
+      <h2 id="morph-heading" class="heading-wide text-4xl md:text-6xl leading-tight">
+        Strukturált gondoskodás, finom kivitelben.
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-px morph-text">
+      <div class="value-card pt-10 pr-8 border-t border-current/20">
+        <span class="label-wide text-xs text-terracotta">I.</span>
+        <h3 class="heading-wide text-2xl mt-6 mb-4">Vagyonvédelmi Tervezés</h3>
+        <p class="font-light leading-relaxed opacity-75 text-sm">
+          Strukturált megoldások, amelyek megóvják eszközeit a váratlan élethelyzetektől,
+          miközben rugalmasságot biztosítanak a jövő számára.
+        </p>
+      </div>
+      <div class="value-card pt-10 pr-8 border-t border-current/20">
+        <span class="label-wide text-xs text-terracotta">II.</span>
+        <h3 class="heading-wide text-2xl mt-6 mb-4">Generációs Átadás</h3>
+        <p class="font-light leading-relaxed opacity-75 text-sm">
+          Gondosan megtervezett öröklési struktúrák, amelyek minimalizálják a terheket,
+          és tisztán közvetítik szándékait az utódoknak.
+        </p>
+      </div>
+      <div class="value-card pt-10 pr-8 border-t border-current/20">
+        <span class="label-wide text-xs text-terracotta">III.</span>
+        <h3 class="heading-wide text-2xl mt-6 mb-4">Családi Életbiztosítás</h3>
+        <p class="font-light leading-relaxed opacity-75 text-sm">
+          Testreszabott életbiztosítási konstrukciók, amelyek a család valós igényeihez
+          és hosszú távú értékeihez igazodnak.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ QUOTE REVEAL ============ -->
+<section id="quote" class="relative px-6 md:px-12 py-32 md:py-48 bg-forest text-cream">
+  <div class="max-w-5xl mx-auto text-center">
+    <span class="text-terracotta text-5xl md:text-7xl leading-none heading-wide">&ldquo;</span>
+    <blockquote id="quote-text" class="heading-wide text-3xl md:text-5xl leading-tight md:leading-tight mt-4">
+      A valódi gazdagság nem abban mérhető, amink van, hanem abban, akiket biztonságban tudhatunk, akármi is történjék.
+    </blockquote>
+    <p class="label-wide text-xs mt-12 opacity-60">— Az Örökség &amp; Bizalom Alapelve</p>
+  </div>
+</section>
+
+<!-- ============ CTA / CONTACT ============ -->
+<section id="kapcsolat" class="relative px-6 md:px-12 py-32 md:py-44 bg-forest text-cream">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-12 gap-12 items-end">
+    <div class="md:col-span-8">
+      <p class="label-wide text-xs text-terracotta mb-6">Kezdjük el a beszélgetést</p>
+      <h2 class="heading-wide text-4xl md:text-6xl leading-tight">
+        Készen áll a családja jövőjéről gondoskodni?
+      </h2>
+    </div>
+    <div class="md:col-span-4 flex md:justify-end">
+      <button class="btn-outline px-10 py-5 label-wide text-xs whitespace-nowrap">
+        <span class="btn-text">Időpontot foglalok</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto mt-32 pt-10 border-t border-cream/15 flex flex-col md:flex-row justify-between gap-6 text-xs label-wide opacity-50">
+    <span>Örökség &amp; Bizalom © 2026</span>
+    <span>Budapest · Bécs · Zürich</span>
+  </div>
+</section>
+
+<!-- ============ GSAP LOGIC ============ -->
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+document.fonts.ready.then(() => {
+
+  // ---------- HERO LINE-BY-LINE REVEAL ----------
+  const heroTl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+
+  heroTl
+    .to('#hero-eyebrow', { opacity: 1, duration: 1, ease: 'power2.out' }, 0.1)
+    .fromTo('.line-mask .line-inner',
+      { yPercent: 100, opacity: 0 },
+      { yPercent: 0, opacity: 1, duration: 1.5, stagger: 0.18, ease: 'power4.out' },
+      0.3
+    )
+    .fromTo('#hero-sub',
+      { yPercent: 100, opacity: 0 },
+      { yPercent: 0, opacity: 1, duration: 1.2, ease: 'power3.out' },
+      1.1
+    )
+    .to('#hero-cta', { opacity: 1, duration: 1, ease: 'power2.out' }, 1.5);
+
+  // Scroll indicator line animates continuously
+  gsap.fromTo('#scroll-line',
+    { scaleY: 0 },
+    { scaleY: 1, duration: 1.6, repeat: -1, yoyo: true, ease: 'power1.inOut' }
+  );
+
+  // ---------- PORTRAIT ARCH: MOUSE PARALLAX ----------
+  const archWrapper = document.getElementById('arch-wrapper');
+  const archFrame = document.getElementById('arch-frame');
+  const archImg = archFrame.querySelector('img');
+
+  // Gentle scroll-in reveal for the arch
+  gsap.fromTo(archWrapper,
+    { y: 60, opacity: 0 },
+    {
+      y: 0, opacity: 1, duration: 1.4, ease: 'power3.out',
+      scrollTrigger: {
+        trigger: archWrapper,
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      }
+    }
+  );
+
+  let parallaxX = 0, parallaxY = 0;
+  let currentX = 0, currentY = 0;
+
+  const archSection = document.getElementById('filozofia');
+
+  archSection.addEventListener('mousemove', (e) => {
+    const rect = archWrapper.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / rect.width;
+    const dy = (e.clientY - cy) / rect.height;
+    parallaxX = dx * 18;
+    parallaxY = dy * 18;
+  });
+
+  archSection.addEventListener('mouseleave', () => {
+    parallaxX = 0;
+    parallaxY = 0;
+  });
+
+  gsap.ticker.add(() => {
+    currentX += (parallaxX - currentX) * 0.06;
+    currentY += (parallaxY - currentY) * 0.06;
+    gsap.set(archFrame, { x: currentX, y: currentY * 0.6 });
+    gsap.set(archImg, { x: -currentX * 0.7, y: -currentY * 0.4, scale: 1.08 });
+  });
+
+  // ---------- VALUE SECTION: CREAM -> FOREST COLOR MORPH ----------
+  const morphSection = document.querySelector('[data-morph-section]');
+
+  // Define the color targets
+  const lightBg = '#FFFBEB';
+  const darkBg = '#064E3B';
+  const lightText = '#064E3B';
+  const darkText = '#FFFBEB';
+
+  ScrollTrigger.create({
+    trigger: morphSection,
+    start: 'top 70%',
+    end: 'bottom 40%',
+    scrub: 1,
+    onUpdate: (self) => {
+      const p = self.progress;
+      const bg = gsap.utils.interpolate(lightBg, darkBg, p);
+      const txt = gsap.utils.interpolate(lightText, darkText, p);
+      gsap.set('body', { backgroundColor: bg, color: txt });
+    }
+  });
+
+  // Once fully morphed (entering the quote/contact sections which are hard-coded dark),
+  // keep body dark so there's no flash back to light when scrolling further.
+  ScrollTrigger.create({
+    trigger: '#quote',
+    start: 'top top',
+    end: 'bottom bottom',
+    onEnter: () => gsap.set('body', { backgroundColor: darkBg, color: darkText }),
+    onLeaveBack: () => {} // handled by the scrub above
+  });
+
+  // Subtle fade-up for value cards
+  gsap.utils.toArray('.value-card').forEach((card, i) => {
+    gsap.fromTo(card,
+      { y: 40, opacity: 0 },
+      {
+        y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: i * 0.08,
+        scrollTrigger: {
+          trigger: card,
+          start: 'top 88%',
+          toggleActions: 'play none none none'
+        }
+      }
+    );
+  });
+
+  gsap.fromTo('#morph-heading',
+    { y: 30, opacity: 0 },
+    {
+      y: 0, opacity: 1, duration: 1.2, ease: 'power3.out',
+      scrollTrigger: { trigger: '#morph-heading', start: 'top 85%', toggleActions: 'play none none none' }
+    }
+  );
+  gsap.fromTo('#morph-eyebrow',
+    { opacity: 0 },
+    {
+      opacity: 1, duration: 1, ease: 'power2.out',
+      scrollTrigger: { trigger: '#morph-eyebrow', start: 'top 90%', toggleActions: 'play none none none' }
+    }
+  );
+
+  // ---------- QUOTE REVEAL: WORD BY WORD ----------
+  const quoteEl = document.getElementById('quote-text');
+  const originalText = quoteEl.textContent.trim();
+  const words = originalText.split(/\s+/);
+  quoteEl.innerHTML = words
+    .map(w => `<span class="word">${w}</span>`)
+    .join(' ');
+
+  gsap.to('#quote-text .word', {
+    opacity: 1,
+    stagger: 0.06,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#quote-text',
+      start: 'top 80%',
+      end: 'bottom 50%',
+      scrub: 0.6
+    }
+  });
+
+  // ---------- GENERIC FADE-UPS for remaining content ----------
+  gsap.utils.toArray('#filozofia .order-2, #filozofia .order-1').forEach(() => {}); // no-op guard
+
+  gsap.fromTo('#kapcsolat h2',
+    { y: 30, opacity: 0 },
+    {
+      y: 0, opacity: 1, duration: 1.2, ease: 'power3.out',
+      scrollTrigger: { trigger: '#kapcsolat h2', start: 'top 85%', toggleActions: 'play none none none' }
+    }
+  );
+
+  ScrollTrigger.refresh();
+});
+</script>
+
+</body>
+</html>
